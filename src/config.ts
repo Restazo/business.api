@@ -1,18 +1,20 @@
-import dotenv from "dotenv"
+import dotenv from "dotenv";
+import { z } from "zod";
 
+import { EnvSchema } from "schemas/schemas.js";
 
+dotenv.config();
 
-dotenv.config()
+try {
+  EnvSchema.parse(process.env);
+} catch (error) {
+  console.log("Missing environmental variables. Check your .env file.");
+  console.log("Terminating application...");
+  process.exit(1);
+}
 
-if (
-  !process.env.ENV ||
-  !process.env.API_PORT ||
-  !process.env.DB_USER ||
-  !process.env.DB_PWD ||
-  !process.env.DB_HOST ||
-  !process.env.DB_PORT
-) {
-  console.log("Missing environmental variables. Check your .env file.")
-  console.log("Terminating application...")
-  process.exit(1)
+declare global {
+  namespace NodeJS {
+    interface ProcessEnv extends z.infer<typeof EnvSchema> {}
+  }
 }
