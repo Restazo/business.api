@@ -12,7 +12,8 @@ CREATE TABLE business (
     email TEXT,
     password TEXT,
     name TEXT,
-    card TEXT
+    card TEXT,
+    refresh_token TEXT
 );
 
 -- Creating the 'restaurant' table
@@ -33,10 +34,9 @@ CREATE TABLE restaurant_address (
     latitude NUMERIC,
     longitude NUMERIC,
     address_line TEXT,
-    city TEXT,
-    postal_area TEXT,
+    locality TEXT,
+    postal_code TEXT,
     country_code TEXT,
-    country TEXT,
     FOREIGN KEY (restaurant_id) REFERENCES restaurant(id)
 );
 
