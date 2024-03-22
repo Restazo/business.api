@@ -1,15 +1,15 @@
-import express from "express"
-import cors from "cors"
-import morgan from "morgan"
-import "./config.js"
+import express from "express";
+import cors from "cors";
+import morgan from "morgan";
+import "./config.js";
 
-import testRoutes from "./routes/testRoutes.js"
+import authenticationRoutes from "./routes/authenticationRoutes.js";
 
-const app = express()
+const app = express();
 
 if (process.env.ENV === "dev") {
-  console.log("Running in development mode")
-  app.use(morgan("dev"))
+  console.log("Running in development mode");
+  app.use(morgan("dev"));
 }
 
 app.use(
@@ -17,14 +17,12 @@ app.use(
     origin: true,
     credentials: true,
   })
-)
+);
 
-app.use(express.json())
+app.use(express.json());
 
-
-
-app.use("/test", testRoutes)
+app.use("/", authenticationRoutes);
 
 app.listen(process.env.API_PORT, () => {
-  console.log(`Server is running on port ${process.env.API_PORT}`)
-})
+  console.log(`Server is running on port ${process.env.API_PORT}`);
+});
