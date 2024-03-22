@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import { z } from "zod";
 
-import { EnvSchema } from "schemas/schemas.js";
+import { EnvSchema } from "./schemas/schemas.js";
 
 dotenv.config();
 
