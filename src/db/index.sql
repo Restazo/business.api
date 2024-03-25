@@ -25,7 +25,10 @@ CREATE TABLE restaurant (
     affordability INTEGER,
     logo_file_path VARCHAR(255) UNIQUE, -- Should be restaurant_id based: /covers/<restaurant_id>.png
     cover_file_path VARCHAR(255) UNIQUE, -- Should be restaurant_id based: /logos/<restaurant_id>.png
-    FOREIGN KEY (business_id) REFERENCES business(id)
+    CONSTRAINT fk_business
+        FOREIGN KEY(business_id) 
+        REFERENCES business(id) 
+        ON DELETE CASCADE
 );
 
 -- Creating the 'restaurant_address' table
@@ -37,7 +40,10 @@ CREATE TABLE restaurant_address (
     city VARCHAR(255) NOT NULL,
     postal_code VARCHAR(255) NOT NULL,
     country_code VARCHAR(255) NOT NULL,
-    FOREIGN KEY (restaurant_id) REFERENCES restaurant(id)
+    CONSTRAINT fk_restaurant
+        FOREIGN KEY(restaurant_id) 
+        REFERENCES restaurant(id) 
+        ON DELETE CASCADE
 );
 
 -- Creating the 'menu_category' table
@@ -45,7 +51,10 @@ CREATE TABLE menu_category (
     category_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     restaurant_id UUID NOT NULL,
     label VARCHAR(255) NOT NULL,
-    FOREIGN KEY (restaurant_id) REFERENCES restaurant(id)
+    CONSTRAINT fk_restaurant
+        FOREIGN KEY(restaurant_id) 
+        REFERENCES restaurant(id) 
+        ON DELETE CASCADE
 );
 
 -- Creating the 'menu_item' table
@@ -58,7 +67,10 @@ CREATE TABLE menu_item (
     ingredients TEXT NOT NULL,
     price_amount NUMERIC(10, 2) NOT NULL,
     price_currency VARCHAR(255) NOT NULL,
-    FOREIGN KEY (category_id) REFERENCES menu_category(category_id)
+    CONSTRAINT fk_category
+        FOREIGN KEY(category_id) 
+        REFERENCES menu_category(category_id) 
+        ON DELETE CASCADE
 );
 
 -- Creating the 'waiter' table
@@ -68,7 +80,10 @@ CREATE TABLE waiter (
     username VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     refresh_token VARCHAR(255),
-    FOREIGN KEY (restaurant_id) REFERENCES restaurant(id)
+    CONSTRAINT fk_restaurant
+        FOREIGN KEY(restaurant_id) 
+        REFERENCES restaurant(id) 
+        ON DELETE CASCADE
 );
 
 -- Creating the 'restaurant_table' table
@@ -77,11 +92,14 @@ CREATE TABLE restaurant_table (
     restaurant_id UUID NOT NULL,
     label VARCHAR(255) NOT NULL,
     capacity INTEGER NOT NULL,
-    FOREIGN KEY (restaurant_id) REFERENCES restaurant(id)
+    CONSTRAINT fk_restaurant
+        FOREIGN KEY(restaurant_id) 
+        REFERENCES restaurant(id) 
+        ON DELETE CASCADE
 );
 
--- Creating the 'orders' table
-CREATE TABLE orders (
+-- Creating the 'restaurant_order' table
+CREATE TABLE restaurant_order (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     paid BOOLEAN DEFAULT FALSE NOT NULL,
     completed BOOLEAN DEFAULT FALSE NOT NULL,
@@ -92,8 +110,14 @@ CREATE TABLE orders (
 CREATE TABLE ongoing_table_orders (
     table_id UUID NOT NULL,
     order_id UUID NOT NULL UNIQUE,
-    FOREIGN KEY (table_id) REFERENCES restaurant_table(id),
-    FOREIGN KEY (order_id) REFERENCES orders(id)
+    CONSTRAINT fk_table
+        FOREIGN KEY(table_id) 
+        REFERENCES restaurant_table(id) 
+        ON DELETE CASCADE,
+    CONSTRAINT fk_restaurant_order
+        FOREIGN KEY(order_id) 
+        REFERENCES restaurant_order(id) 
+        ON DELETE CASCADE
 );
 
 -- Creating the 'order_items' table
@@ -101,6 +125,12 @@ CREATE TABLE order_items (
     order_id UUID NOT NULL,
     item_id UUID NOT NULL,
     amount INTEGER NOT NULL,
-    FOREIGN KEY (order_id) REFERENCES orders(id),
-    FOREIGN KEY (item_id) REFERENCES menu_item(id)
+    CONSTRAINT fk_menu_item
+        FOREIGN KEY(item_id) 
+        REFERENCES menu_item(id) 
+        ON DELETE CASCADE,
+    CONSTRAINT fk_order
+        FOREIGN KEY(order_id) 
+        REFERENCES restaurant_order(id) 
+        ON DELETE CASCADE
 );
