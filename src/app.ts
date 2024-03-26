@@ -6,6 +6,7 @@ import "./config.js";
 
 import deserializeUser from "./middleware/deserializeUser.js";
 import authenticationRoutes from "./routes/authenticationRoutes.js";
+import businessRoutes from "./routes/businessRoutes.js";
 
 const app = express();
 
@@ -13,8 +14,6 @@ if (process.env.ENV === "dev") {
   console.log("Running in development mode");
   app.use(morgan("dev"));
 }
-
-
 
 app.use(cookieParser());
 app.use(
@@ -28,7 +27,8 @@ app.use(deserializeUser); // use this middleware in every route
 
 app.use(express.json());
 
-app.use("/", authenticationRoutes);
+app.use("/auth", authenticationRoutes);
+app.use("/business", businessRoutes);
 
 app.listen(process.env.API_PORT, () => {
   console.log(`Server is running on port ${process.env.API_PORT}`);
