@@ -8,6 +8,7 @@ export const registerBusiness = async (
   email: string,
   hashedPassword: string,
   businessName: string,
+  restaurantName: string,
   card: string,
   address: ExtendedAddress
 ) => {
@@ -40,8 +41,8 @@ export const registerBusiness = async (
     // Insert data into the restaurant table
 
     const restaurantResult = await client.query(
-      "INSERT INTO restaurant (business_id) VALUES ($1) RETURNING id",
-      [businessId]
+      "INSERT INTO restaurant (business_id, name) VALUES ($1, $2) RETURNING id",
+      [businessId, restaurantName]
     );
 
     const restaurantId = restaurantResult.rows[0].id;
@@ -58,7 +59,7 @@ export const registerBusiness = async (
     // Insert data into restaurant_address table
 
     await client.query(
-      "INSERT INTO restaurant_address (latitude, longitude, address_line, locality, postal_code, country_code, restaurant_id) VALUES($1, $2, $3, $4, $5, $6, $7)",
+      "INSERT INTO restaurant_address (latitude, longitude, address_line, city, postal_code, country_code, restaurant_id) VALUES($1, $2, $3, $4, $5, $6, $7)",
       [
         latitude,
         longitude,

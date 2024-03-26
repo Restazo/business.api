@@ -17,6 +17,7 @@ export const RegisterSchema = z.object({
   password: z.string().min(8),
   confirm_password: z.string().min(8),
   business_name: z.string().min(1),
+  restaurant_name: z.string().min(1),
   card: z.string().length(16), // this will probably change
   address: AddressSchema,
 });
