@@ -2,10 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import sendResponse from "../lib/api-response.js";
 import { signTokens, updateRefreshToken } from "../lib/jwt-utils.js";
 
-export const cookieConfig = {
-  httpOnly: true,
-  secure: true,
-};
+import { cookieConfig } from "../config.js";
 
 const protect = async (req: Request, res: Response, next: NextFunction) => {
   if (!req.user) {

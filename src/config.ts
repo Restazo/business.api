@@ -11,3 +11,11 @@ try {
   console.log("Terminating application...");
   process.exit(1);
 }
+
+
+/* *********************** Cookie configuration*********************** */
+export const cookieConfig = {
+  httpOnly: true,
+  secure: true,
+};
+

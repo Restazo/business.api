@@ -1,9 +1,12 @@
-import { Router } from "express"
+import { Router } from "express";
 
-import {register } from "../controllers/authentication.js"
+import { register, logIn, getSession } from "../controllers/authentication.js";
+import protect from "../middleware/protect.js";
 
-const router = Router()
+const router = Router();
 
-router.post("/register", register)
+router.post("/register", register);
+router.post("/login", logIn);
+router.get("/session", protect, getSession);
 
-export default router
+export default router;

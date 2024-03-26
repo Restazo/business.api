@@ -74,7 +74,7 @@ export const registerBusiness = async (
     await client.query("COMMIT");
 
     // Return access token to be sent to client
-    return { accessToken };
+    return { accessToken, refreshToken };
   } catch (error) {
     await client.query("ROLLBACK");
     console.log(error);
