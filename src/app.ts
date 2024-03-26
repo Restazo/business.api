@@ -1,8 +1,10 @@
 import express from "express";
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import morgan from "morgan";
 import "./config.js";
 
+import deserializeUser from "./middleware/deserializeUser.js";
 import authenticationRoutes from "./routes/authenticationRoutes.js";
 
 const app = express();
@@ -12,12 +14,17 @@ if (process.env.ENV === "dev") {
   app.use(morgan("dev"));
 }
 
+
+
+app.use(cookieParser());
 app.use(
   cors({
     origin: true,
     credentials: true,
   })
 );
+
+app.use(deserializeUser); // use this middleware in every route
 
 app.use(express.json());
 
