@@ -1,8 +1,7 @@
-import { z } from "zod";
-
 import { pool } from "../db/db.js";
 
 import { ExtendedAddress } from "../schemas/types.js";
+import { signTokens } from "./jwt-utils.js";
 
 // A function to register business and restaurant data simultaneously
 export const registerBusiness = async (
@@ -24,6 +23,20 @@ export const registerBusiness = async (
 
     const businessId = businessResult.rows[0].id;
 
+    // Create JWT Tokens
+
+    const { accessToken, refreshToken } = signTokens({
+      id: businessId,
+      name: businessName,
+      email: email,
+    });
+
+    // Set refresh token
+    await client.query("UPDATE business SET refresh_token = $1 WHERE id = $2", [
+      refreshToken,
+      businessId,
+    ]);
+
     // Insert data into the restaurant table
 
     const restaurantResult = await client.query(
@@ -44,15 +57,6 @@ export const registerBusiness = async (
 
     // Insert data into restaurant_address table
 
-    console.log(
-      latitude,
-      longitude,
-      address_line,
-      locality,
-      postal_code,
-      country_code,
-      restaurantId
-    );
     await client.query(
       "INSERT INTO restaurant_address (latitude, longitude, address_line, locality, postal_code, country_code, restaurant_id) VALUES($1, $2, $3, $4, $5, $6, $7)",
       [
@@ -68,11 +72,12 @@ export const registerBusiness = async (
 
     await client.query("COMMIT");
 
-    return true;
+    // Return access token to be sent to client
+    return { accessToken };
   } catch (error) {
     await client.query("ROLLBACK");
     console.log(error);
-    return false;
+    return;
   } finally {
     client.release();
   }
