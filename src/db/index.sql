@@ -13,7 +13,7 @@ CREATE TABLE business (
     password VARCHAR(255) NOT NULL,
     name VARCHAR(255) NOT NULL,
     card TEXT NOT NULL,
-    refresh_token VARCHAR(255)
+    refresh_token VARCHAR(400)
 );
 
 -- Creating the 'restaurant' table
@@ -23,8 +23,8 @@ CREATE TABLE restaurant (
     name VARCHAR(255) NOT NULL,
     description TEXT,
     affordability INTEGER,
-    logo_file_path VARCHAR(255) UNIQUE, -- Should be restaurant_id based: /covers/<restaurant_id>.png
-    cover_file_path VARCHAR(255) UNIQUE, -- Should be restaurant_id based: /logos/<restaurant_id>.png
+    logo_file_path VARCHAR(255) UNIQUE, -- Should be restaurant_id based: /logos/<restaurant_id>.png
+    cover_file_path VARCHAR(255) UNIQUE, -- Should be restaurant_id based: /cover/<restaurant_id>.png
     CONSTRAINT fk_business
         FOREIGN KEY(business_id) 
         REFERENCES business(id) 
@@ -79,7 +79,7 @@ CREATE TABLE waiter (
     restaurant_id UUID NOT NULL,
     username VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    refresh_token VARCHAR(255),
+    refresh_token VARCHAR(400),
     CONSTRAINT fk_restaurant
         FOREIGN KEY(restaurant_id) 
         REFERENCES restaurant(id) 
