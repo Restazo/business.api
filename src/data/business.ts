@@ -17,7 +17,7 @@ export const getBusinessById = async (id: string) => {
 
     return business;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return null;
   }
 };
@@ -37,7 +37,7 @@ export const getBusinessByEmail = async (email: string) => {
 
     return business;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return null;
   }
 };

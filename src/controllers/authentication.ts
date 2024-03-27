@@ -90,7 +90,7 @@ export const register = async (req: Request, res: Response) => {
 
     return sendResponse(res, 200, "registration successful");
   } catch (error: any) {
-    console.log(error);
+    console.error(error);
     return sendResponse(res, 500, "internal server error");
   }
 };
@@ -147,9 +147,6 @@ export const logIn = async (req: Request, res: Response) => {
 /* *********************** Get Session Controller *********************** */
 export const getSession = async (req: Request, res: Response) => {
   try {
-    if (!req.user) {
-      return sendResponse(res, 403, "invalid session");
-    }
     const data = {
       id: req.user.id,
       name: req.user.name,
@@ -157,6 +154,7 @@ export const getSession = async (req: Request, res: Response) => {
     };
     return sendResponse(res, 200, "valid session", data);
   } catch (error) {
+    console.error(error);
     return sendResponse(res, 500, "internal server error");
   }
 };
@@ -164,15 +162,12 @@ export const getSession = async (req: Request, res: Response) => {
 /* *********************** Logout Controller *********************** */
 export const logOut = async (req: Request, res: Response) => {
   try {
-    if (!req.user) {
-      return sendResponse(res, 403, "invalid session");
-    }
-
     await deleteRefreshToken(req.user.id);
 
     res.clearCookie("refreshToken", cookieConfig);
     return sendResponse(res, 200, "logout succesful");
   } catch (error) {
+    console.error(error);
     return sendResponse(res, 500, "internal server error");
   }
 };

@@ -44,10 +44,15 @@ const deserializeUser = async (
     if (decodedAccessToken.payload) {
       try {
         const user = await getBusinessById(decodedAccessToken.payload.id);
+
+        if (!user) {
+          return next();
+        }
+
         req.user = user;
         return next();
       } catch (error) {
-        console.log(error);
+        console.error(error);
         return next();
       }
     }
@@ -60,7 +65,6 @@ const deserializeUser = async (
     if (!decodedAccessToken.payload && refreshToken) {
       // If not valid refresh token
       if (!decodedRefreshToken.payload) {
-        console.log("refresh token is null");
         return next();
       }
 
@@ -68,20 +72,23 @@ const deserializeUser = async (
       try {
         const user = await getBusinessById(decodedRefreshToken.payload.id);
 
+        if (!user) {
+          return next();
+        }
+
         // If refresh token doesnt match our DB token
         if (user?.refresh_token !== refreshToken) {
-          console.log("refresh token doesnt match");
           return next();
         }
         req.user = user;
         return next();
       } catch (error) {
-        console.log(error);
+        console.error(error);
         return next();
       }
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return next();
   }
 };

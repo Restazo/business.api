@@ -77,7 +77,7 @@ export const registerBusiness = async (
     return { accessToken, refreshToken };
   } catch (error) {
     await client.query("ROLLBACK");
-    console.log(error);
+    console.error(error);
     return;
   } finally {
     client.release();

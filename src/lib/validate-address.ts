@@ -66,7 +66,7 @@ export const validateAddress = async (
 
     return { data: extendedAddress };
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return null;
   }
 };
