@@ -12,7 +12,7 @@ export const deleteBusiness = async (req: Request, res: Response) => {
     res.clearCookie("refreshToken", cookieConfig);
     sendResponse(res, 200, "business deleted");
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return sendResponse(res, 500, "internal server error");
   }
 };
