@@ -8,10 +8,6 @@ import { cookieConfig } from "../config.js";
 /* *********************** Delete Business Controller *********************** */
 export const deleteBusiness = async (req: Request, res: Response) => {
   try {
-    if (!req.user) {
-      return sendResponse(res, 403, "invalid session");
-    }
-
     await pool.query("DELETE FROM business WHERE id = $1", [req.user.id]);
     res.clearCookie("refreshToken", cookieConfig);
     sendResponse(res, 200, "business deleted");
