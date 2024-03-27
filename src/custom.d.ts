@@ -6,7 +6,7 @@ import { z } from "zod";
 declare global {
   namespace Express {
     interface Request {
-      user: Business | null;
+      user: Business;
     }
   }
   namespace NodeJS {

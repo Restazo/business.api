@@ -5,6 +5,6 @@ import protect from "../middleware/protect.js";
 
 const router = Router();
 
-router.delete("/delete", protect, deleteBusiness);
+router.delete("/", protect, deleteBusiness);
 
 export default router;
