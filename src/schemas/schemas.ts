@@ -36,6 +36,16 @@ export const BusinessSchema = z.object({
   refresh_token: z.string().optional(),
 });
 
+export const RestaurantSchema = z.object({
+  id: z.string().min(1),
+  business_id: z.string().min(1),
+  name: z.string().min(1),
+  description: z.string().optional(),
+  affordability: z.string().optional(),
+  logo_file_path: z.string().optional(),
+  cover_file_path: z.string().optional(),
+});
+
 export const EnvSchema = z.object({
   ENV: z.string().min(1),
   API_PORT: z.string().min(1),
