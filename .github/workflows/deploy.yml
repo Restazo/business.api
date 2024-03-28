@@ -18,6 +18,9 @@ jobs:
           port: ${{ secrets.PORT }}
           command_timeout: 5m
           script: |
-            echo "Nice Job!!!"
-
-# try again
+            cd ~/Restazo/business.api
+            git checkout main
+            git pull origin main
+            npm ci
+            npm run build
+            pm2 restart restazo-business-api
