@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - name: print out example job
+      - name: Deploy the latest version of the Restazo Business API
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.HOST }}
