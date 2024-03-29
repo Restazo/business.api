@@ -43,6 +43,7 @@ export const EnvSchema = z.object({
   DB_PWD: z.string().min(1),
   DB_HOST: z.string().min(1),
   DB_PORT: z.string().min(1),
+  DB_DATABASE: z.string().min(1),
   ACCESS_TOKEN_SECRET: z.string().min(1),
   REFRESH_TOKEN_SECRET: z.string().min(1),
   ACCESS_TOKEN_EXPIRY: z.string().min(1),
