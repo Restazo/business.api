@@ -25,6 +25,7 @@ CREATE TABLE restaurant (
     affordability INTEGER,
     logo_file_path VARCHAR(255) UNIQUE, -- Should be restaurant_id based: /logos/<restaurant_id>.png
     cover_file_path VARCHAR(255) UNIQUE, -- Should be restaurant_id based: /cover/<restaurant_id>.png
+    listed BOOLEAN DEFAULT false NOT NULL,
     CONSTRAINT fk_business
         FOREIGN KEY(business_id) 
         REFERENCES business(id) 
@@ -48,7 +49,7 @@ CREATE TABLE restaurant_address (
 
 -- Creating the 'menu_category' table
 CREATE TABLE menu_category (
-    category_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     restaurant_id UUID NOT NULL,
     label VARCHAR(255) NOT NULL,
     CONSTRAINT fk_restaurant
@@ -69,7 +70,7 @@ CREATE TABLE menu_item (
     price_currency VARCHAR(255) NOT NULL,
     CONSTRAINT fk_category
         FOREIGN KEY(category_id) 
-        REFERENCES menu_category(category_id) 
+        REFERENCES menu_category(id) 
         ON DELETE CASCADE
 );
 

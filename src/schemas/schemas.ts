@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const AddressSchema = z.object({
   address_line: z.string().min(1),
-  locality: z.string().min(1),
+  city: z.string().min(1),
   postal_code: z.string().min(1),
   country_code: z.string().min(1),
 });
@@ -33,17 +33,24 @@ export const BusinessSchema = z.object({
   name: z.string().min(1),
   password: z.string().min(1),
   card: z.string().length(16),
-  refresh_token: z.string().optional(),
+  refresh_token: z.string().nullable(),
 });
 
 export const RestaurantSchema = z.object({
   id: z.string().min(1),
   business_id: z.string().min(1),
   name: z.string().min(1),
-  description: z.string().optional(),
-  affordability: z.string().optional(),
-  logo_file_path: z.string().optional(),
-  cover_file_path: z.string().optional(),
+  description: z.string().nullable(),
+  affordability: z.string().nullable(),
+  logo_file_path: z.string().nullable(),
+  cover_file_path: z.string().nullable(),
+  listed: z.boolean(),
+});
+
+export const ProfileResponseSchema = z.object({
+  restaurant: RestaurantSchema.extend({
+    address: ExtendedAddressSchema,
+  }).omit({ business_id: true }),
 });
 
 export const EnvSchema = z.object({
