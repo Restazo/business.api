@@ -7,6 +7,7 @@ import "./config.js";
 import deserializeUser from "./middleware/deserializeUser.js";
 import authenticationRoutes from "./routes/authenticationRoutes.js";
 import businessRoutes from "./routes/businessRoutes.js";
+import restaurantRoutes from "./routes/restaurantRoutes.js";
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.use(express.json());
 
 app.use("/auth", authenticationRoutes);
 app.use("/business", businessRoutes);
+app.use("/restaurants", restaurantRoutes);
 
 app.listen(process.env.API_PORT, () => {
   console.log(`Server is running on port ${process.env.API_PORT}`);
