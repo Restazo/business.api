@@ -2,7 +2,7 @@
 TRUNCATE TABLE
   order_items,
   ongoing_table_orders,
-  orders,
+  restaurant_order,
   waiter,
   menu_item,
   menu_category,

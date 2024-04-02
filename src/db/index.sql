@@ -25,6 +25,7 @@ CREATE TABLE restaurant (
     affordability INTEGER,
     logo_file_path VARCHAR(255) UNIQUE, -- Should be restaurant_id based: /logos/<restaurant_id>.png
     cover_file_path VARCHAR(255) UNIQUE, -- Should be restaurant_id based: /cover/<restaurant_id>.png
+    listed BOOLEAN DEFAULT FALSE NOT NULL,
     CONSTRAINT fk_business
         FOREIGN KEY(business_id) 
         REFERENCES business(id) 
