@@ -22,7 +22,7 @@ CREATE TABLE restaurant (
     business_id UUID NOT NULL,
     name VARCHAR(255) NOT NULL,
     description TEXT,
-    affordability INTEGER DEFUALT 3 NOT NULL,
+    affordability INTEGER DEFAULT 3 NOT NULL,
     logo_file_path VARCHAR(255) UNIQUE, -- Should be restaurant_id based: /logos/<restaurant_id>.png
     cover_file_path VARCHAR(255) UNIQUE, -- Should be restaurant_id based: /cover/<restaurant_id>.png
     listed BOOLEAN DEFAULT FALSE NOT NULL,
@@ -70,7 +70,7 @@ CREATE TABLE menu_item (
     price_currency VARCHAR(255) NOT NULL,
     CONSTRAINT fk_category
         FOREIGN KEY(category_id) 
-        REFERENCES menu_category(category_id) 
+        REFERENCES menu_category(id) 
         ON DELETE CASCADE
 );
 
