@@ -103,7 +103,7 @@ INSERT INTO restaurant_address (restaurant_id,
 
 
 -- Create menu categories for each restaurant menu
-INSERT INTO menu_category (category_id,
+INSERT INTO menu_category (id,
                            restaurant_id,
                            label) 
                    VALUES ('11111111-1111-1111-1111-111111111111',
