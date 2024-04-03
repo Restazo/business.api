@@ -49,7 +49,7 @@ CREATE TABLE restaurant_address (
 
 -- Creating the 'menu_category' table
 CREATE TABLE menu_category (
-    category_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     restaurant_id UUID NOT NULL,
     label VARCHAR(255) NOT NULL,
     CONSTRAINT fk_restaurant
