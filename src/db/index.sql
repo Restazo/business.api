@@ -1,5 +1,21 @@
+-- ######################### EXTENTIONS #########################
+
+
 -- Ensure the UUID extension is available
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+
+-- ######################### ENUMS and TYPES #########################
+
+
+CREATE TYPE currency_enum AS ENUM (
+    'usd',
+    'eur'
+);
+
+
+-- ######################### TABLES #########################
+
 
 -- Creating the 'device' table
 CREATE TABLE device (
@@ -22,7 +38,7 @@ CREATE TABLE restaurant (
     business_id UUID NOT NULL,
     name VARCHAR(255) NOT NULL,
     description TEXT,
-    affordability INTEGER DEFAULT 3 NOT NULL,
+    affordability INTEGER DEFAULT 3 NOT NULL CHECK (affordability IN (1, 2, 3)),
     logo_file_path VARCHAR(255) UNIQUE, -- Should be restaurant_id based: /logos/<restaurant_id>.png
     cover_file_path VARCHAR(255) UNIQUE, -- Should be restaurant_id based: /cover/<restaurant_id>.png
     listed BOOLEAN DEFAULT FALSE NOT NULL,
@@ -67,7 +83,7 @@ CREATE TABLE menu_item (
     description TEXT NOT NULL,
     ingredients TEXT NOT NULL,
     price_amount NUMERIC(10, 2) NOT NULL,
-    price_currency VARCHAR(255) NOT NULL,
+    price_currency currency_enum NOT NULL,
     CONSTRAINT fk_category
         FOREIGN KEY(category_id) 
         REFERENCES menu_category(id) 
