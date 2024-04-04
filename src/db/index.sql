@@ -38,7 +38,7 @@ CREATE TABLE restaurant (
     business_id UUID NOT NULL,
     name VARCHAR(255) NOT NULL,
     description TEXT,
-    affordability INTEGER DEFAULT 3 NOT NULL CHECK (affordability IN (1, 2, 3)),
+    affordability SMALLINT DEFAULT 3 NOT NULL CHECK (affordability IN (1, 2, 3)),
     logo_file_path VARCHAR(255) UNIQUE, -- Should be restaurant_id based: /logos/<restaurant_id>.png
     cover_file_path VARCHAR(255) UNIQUE, -- Should be restaurant_id based: /cover/<restaurant_id>.png
     listed BOOLEAN DEFAULT FALSE NOT NULL,
@@ -108,7 +108,7 @@ CREATE TABLE restaurant_table (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     restaurant_id UUID NOT NULL,
     label VARCHAR(255) NOT NULL,
-    capacity INTEGER NOT NULL,
+    capacity SMALLINT NOT NULL,
     CONSTRAINT fk_restaurant
         FOREIGN KEY(restaurant_id) 
         REFERENCES restaurant(id) 
@@ -141,7 +141,7 @@ CREATE TABLE ongoing_table_orders (
 CREATE TABLE order_items (
     order_id UUID NOT NULL,
     item_id UUID NOT NULL,
-    amount INTEGER NOT NULL,
+    amount SMALLINT NOT NULL,
     CONSTRAINT fk_menu_item
         FOREIGN KEY(item_id) 
         REFERENCES menu_item(id) 
