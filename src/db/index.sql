@@ -1,5 +1,28 @@
+-- ######################### EXTENTIONS #########################
+
+
 -- Ensure the UUID extension is available
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+
+-- ######################### ENUMS and TYPES #########################
+
+
+CREATE TYPE currency_enum AS ENUM (
+    'usd',
+    'eur'
+);
+
+CREATE TYPE country_code_enum AS ENUM (
+    'ar', 'au', 'at', 'be', 'br', 'ca', 'cl', 'co', 'hr', 'cz',
+    'dk', 'ee', 'fi', 'fr', 'de', 'hu', 'ie', 'it', 'lv', 'lt',
+    'lu', 'my', 'mx', 'nl', 'no', 'nz', 'pl', 'pt', 'pr', 'sg',
+    'sk', 'si', 'es', 'se', 'ch', 'gb', 'us'
+);
+
+
+-- ######################### TABLES #########################
+
 
 -- Creating the 'device' table
 CREATE TABLE device (
@@ -22,9 +45,10 @@ CREATE TABLE restaurant (
     business_id UUID NOT NULL,
     name VARCHAR(255) NOT NULL,
     description TEXT,
-    affordability INTEGER,
+    affordability SMALLINT DEFAULT 3 NOT NULL CHECK (affordability IN (1, 2, 3)),
     logo_file_path VARCHAR(255) UNIQUE, -- Should be restaurant_id based: /logos/<restaurant_id>.png
     cover_file_path VARCHAR(255) UNIQUE, -- Should be restaurant_id based: /cover/<restaurant_id>.png
+    listed BOOLEAN DEFAULT FALSE NOT NULL,
     CONSTRAINT fk_business
         FOREIGN KEY(business_id) 
         REFERENCES business(id) 
@@ -39,7 +63,7 @@ CREATE TABLE restaurant_address (
     address_line VARCHAR(255) NOT NULL,
     city VARCHAR(255) NOT NULL,
     postal_code VARCHAR(255) NOT NULL,
-    country_code VARCHAR(255) NOT NULL,
+    country_code country_code_enum NOT NULL,
     CONSTRAINT fk_restaurant
         FOREIGN KEY(restaurant_id) 
         REFERENCES restaurant(id) 
@@ -48,7 +72,7 @@ CREATE TABLE restaurant_address (
 
 -- Creating the 'menu_category' table
 CREATE TABLE menu_category (
-    category_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     restaurant_id UUID NOT NULL,
     label VARCHAR(255) NOT NULL,
     CONSTRAINT fk_restaurant
@@ -66,10 +90,10 @@ CREATE TABLE menu_item (
     description TEXT NOT NULL,
     ingredients TEXT NOT NULL,
     price_amount NUMERIC(10, 2) NOT NULL,
-    price_currency VARCHAR(255) NOT NULL,
+    price_currency currency_enum NOT NULL,
     CONSTRAINT fk_category
         FOREIGN KEY(category_id) 
-        REFERENCES menu_category(category_id) 
+        REFERENCES menu_category(id) 
         ON DELETE CASCADE
 );
 
@@ -91,7 +115,7 @@ CREATE TABLE restaurant_table (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     restaurant_id UUID NOT NULL,
     label VARCHAR(255) NOT NULL,
-    capacity INTEGER NOT NULL,
+    capacity SMALLINT NOT NULL,
     CONSTRAINT fk_restaurant
         FOREIGN KEY(restaurant_id) 
         REFERENCES restaurant(id) 
@@ -124,7 +148,7 @@ CREATE TABLE ongoing_table_orders (
 CREATE TABLE order_items (
     order_id UUID NOT NULL,
     item_id UUID NOT NULL,
-    amount INTEGER NOT NULL,
+    amount SMALLINT NOT NULL,
     CONSTRAINT fk_menu_item
         FOREIGN KEY(item_id) 
         REFERENCES menu_item(id) 
