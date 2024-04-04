@@ -55,8 +55,8 @@ export const validateAddress = async (
       return null;
     }
 
-    const latitude: number = result.geocode.location.latitude;
-    const longitude: number = result.geocode.location.longitude;
+    const latitude = result.geocode.location.latitude;
+    const longitude = result.geocode.location.longitude;
 
     const extendedAddress: ExtendedAddress = {
       ...validatedFields.data,
