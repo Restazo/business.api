@@ -24,7 +24,7 @@ export const getRestaurants = async (req: Request, res: Response) => {
       return sendResponse(res, 404, "no restaurants found");
     }
 
-    const data: z.infer<typeof ProfileResponseSchema>[] = [];
+    const data = [];
 
     // Loop through every restaurant
     for (const restaurant of restaurants) {
@@ -48,7 +48,9 @@ export const getRestaurants = async (req: Request, res: Response) => {
       data.push(restaurantWithAddress);
     }
 
-    sendResponse(res, 200, "restaurants fetched succesfully", data);
+    const parsedData = ProfileResponseSchema.parse(data);
+
+    sendResponse(res, 200, "restaurants fetched succesfully", parsedData);
   } catch (error) {
     console.error(error);
     return sendResponse(res, 500, "internal server error");

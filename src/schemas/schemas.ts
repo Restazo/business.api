@@ -8,8 +8,8 @@ export const AddressSchema = z.object({
 });
 
 export const ExtendedAddressSchema = AddressSchema.extend({
-  latitude: z.number().min(1),
-  longitude: z.number().min(1),
+  latitude: z.string().min(1),
+  longitude: z.string().min(1),
 });
 
 export const RegisterSchema = z.object({
@@ -41,21 +41,42 @@ export const RestaurantSchema = z.object({
   business_id: z.string().min(1),
   name: z.string().min(1),
   description: z.string().nullable(),
-  affordability: z.string().nullable(),
+  affordability: z.number(),
   logo_file_path: z.string().nullable(),
   cover_file_path: z.string().nullable(),
   listed: z.boolean(),
 });
 
-export const ProfileResponseSchema = z.object({
-  restaurant: RestaurantSchema.extend({
-    address: ExtendedAddressSchema,
-  }).omit({ business_id: true }),
+export const ProfileResponseSchema = z.array(
+  z.object({
+    restaurant: RestaurantSchema.extend({
+      address: ExtendedAddressSchema,
+    }).omit({ business_id: true }),
+  })
+);
+
+export const MenuItemSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1),
+  image: z.string().nullable(),
+  description: z.string().min(1).nullable(),
+  ingredients: z.string().min(1).nullable(),
+  priceAmount: z.string().min(1),
+  priceCurrency: z.string().min(1),
 });
+
+export const MenuSchema = z.array(
+  z.object({
+    categoryId: z.string().min(1),
+    categoryLabel: z.string().min(1),
+    categoryItems: z.array(MenuItemSchema),
+  })
+);
 
 export const EnvSchema = z.object({
   ENV: z.string().min(1),
   API_PORT: z.string().min(1),
+  ASSETS_URL: z.string().min(1),
   DB_USER: z.string().min(1),
   DB_PWD: z.string().min(1),
   DB_HOST: z.string().min(1),
