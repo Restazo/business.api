@@ -13,6 +13,13 @@ CREATE TYPE currency_enum AS ENUM (
     'eur'
 );
 
+CREATE TYPE country_code_enum AS ENUM (
+    'ar', 'au', 'at', 'be', 'br', 'ca', 'cl', 'co', 'hr', 'cz',
+    'dk', 'ee', 'fi', 'fr', 'de', 'hu', 'ie', 'it', 'lv', 'lt',
+    'lu', 'my', 'mx', 'nl', 'no', 'nz', 'pl', 'pt', 'pr', 'sg',
+    'sk', 'si', 'es', 'se', 'ch', 'gb', 'us'
+);
+
 
 -- ######################### TABLES #########################
 
@@ -56,7 +63,7 @@ CREATE TABLE restaurant_address (
     address_line VARCHAR(255) NOT NULL,
     city VARCHAR(255) NOT NULL,
     postal_code VARCHAR(255) NOT NULL,
-    country_code VARCHAR(255) NOT NULL,
+    country_code country_code_enum NOT NULL,
     CONSTRAINT fk_restaurant
         FOREIGN KEY(restaurant_id) 
         REFERENCES restaurant(id) 
