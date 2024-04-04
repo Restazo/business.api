@@ -17,7 +17,7 @@ export const getRestaurantsByBusinessId = async (
       [businessId]
     );
 
-    console.log(businessId);
+
 
     if (existingRestaurants.rows.length === 0) {
       return null;
