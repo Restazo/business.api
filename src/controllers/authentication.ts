@@ -76,7 +76,6 @@ export const register = async (req: Request, res: Response) => {
     );
 
     if (!registrationSuccesful) {
-      console.log("Registration function failed");
       return sendResponse(res, 500, "error registering business");
     }
 
