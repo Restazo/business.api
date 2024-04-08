@@ -145,11 +145,6 @@ export const editLogo = async (req: Request, res: Response) => {
     const newLogoFilePath = `/${req.file?.destination}/${req.file?.filename}`;
     const currentRestaurantData = req.restaurantData;
 
-    if (currentRestaurantData.logo_file_path !== null) {
-      // Delete old file
-      await deleteFile(currentRestaurantData.logo_file_path);
-    }
-
     const newRestaurantData = {
       ...currentRestaurantData,
       logo_file_path: newLogoFilePath,
@@ -227,12 +222,6 @@ export const editCover = async (req: Request, res: Response) => {
     const newCoverFilePath = `/${req.file?.destination}/${req.file?.filename}`;
 
     const currentRestaurantData = req.restaurantData;
-
-    // If there is an existing image aka the path is not null we delete it
-    if (currentRestaurantData.cover_file_path !== null) {
-      // Delete old file
-      await deleteFile(currentRestaurantData.cover_file_path);
-    }
 
     const newRestaurantData = {
       ...currentRestaurantData,
