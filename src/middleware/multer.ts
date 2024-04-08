@@ -1,4 +1,5 @@
 import multer from "multer";
+import path from 'path';
 
 import { Request, Response, NextFunction } from "express";
 
@@ -36,7 +37,9 @@ const storage = multer.diskStorage({
   },
   // Here we define the filename to be stored
   filename: (req, file, cb) => {
-    cb(null, `${Date.now()}_${file.originalname}`);
+    const extension = path.extname(file.originalname);
+    const restaurantId = req.params.restaurantId
+    cb(null, `${restaurantId}${extension}`);
   },
 });
 
