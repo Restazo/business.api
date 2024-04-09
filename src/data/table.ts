@@ -82,7 +82,7 @@ export const getTablesByRestaurantId = async (
 
     return validatedData;
   } catch (error) {
-    console.error("Error from getTableByLabelAndRestaurantId function");
+    console.error("Error from getTablesByRestaurantId function");
     throw error;
   }
 };
