@@ -114,3 +114,8 @@ export const CreateTableReqSchema = z.object({
   label: z.string().min(1),
   capacity: toNumber.pipe(z.number().int().min(1).max(30)),
 });
+
+export const DeleteTableParamSchema = z.object({
+  restaurantId: z.string().uuid(),
+  tableId: z.string().uuid(),
+});
