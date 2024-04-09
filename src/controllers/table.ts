@@ -5,12 +5,17 @@ import sendResponse from "../lib/api-response.js";
 
 import { getRestaurantById } from "../data/restaurant.js";
 
-import { getTableById, getTableByLabelAndRestaurantId } from "../data/table.js";
+import {
+  getTableById,
+  getTableByLabelAndRestaurantId,
+  getTablesByRestaurantId,
+} from "../data/table.js";
 
 import {
   UUIDSchema,
   CreateTableReqSchema,
   DeleteTableParamSchema,
+  TableSchema,
 } from "../schemas/schemas.js";
 
 /* *********************** Add Table Controller *********************** */
@@ -105,6 +110,54 @@ export const deleteTable = async (req: Request, res: Response) => {
     await pool.query(query, [tableId]);
 
     return sendResponse(res, 200, "table deleted succesfully");
+  } catch (error) {
+    console.error(error);
+    return sendResponse(res, 500, "internal server error");
+  }
+};
+
+/* *********************** Get Table Controller *********************** */
+
+export const getTables = async (req: Request, res: Response) => {
+  try {
+    // Validate parameter
+    const validatedParameter = UUIDSchema.safeParse(req.params.restaurantId);
+
+    if (!validatedParameter.success) {
+      return sendResponse(res, 400, "invalid parameter values");
+    }
+    const restaurantId = validatedParameter.data;
+
+    const existingRestaurant = await getRestaurantById(restaurantId);
+
+    if (!existingRestaurant) {
+      return sendResponse(res, 404, "no restaurant found");
+    }
+
+    // TODO CHECK IF USER HAS PERMISSION
+    if (existingRestaurant.business_id !== req.user.id) {
+      return sendResponse(res, 403, "invalid session");
+    }
+
+    const data = await getTablesByRestaurantId(restaurantId);
+
+    if (!data) {
+      return sendResponse(
+        res,
+        200,
+        "restaurant tables fetched succesfully",
+        []
+      );
+    }
+
+    const validatedData = TableSchema.array().parse(data);
+
+    return sendResponse(
+      res,
+      200,
+      "restaurant tables fetched succesfully",
+      validatedData
+    );
   } catch (error) {
     console.error(error);
     return sendResponse(res, 500, "internal server error");
