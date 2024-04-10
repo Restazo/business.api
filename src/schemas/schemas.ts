@@ -122,6 +122,6 @@ export const MenuSchema = z.array(
   })
 );
 
-export const CreateMenuCategoryReqSchema = z.object({
+export const CreateOrEditMenuCategoryReqSchema = z.object({
   label: z.string().min(1),
 });
