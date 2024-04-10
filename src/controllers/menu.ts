@@ -1,11 +1,19 @@
 import { Request, Response } from "express";
 
+import { pool } from "../db/db.js";
 import sendResponse from "../lib/api-response.js";
 
 import { getRestaurantById } from "../data/restaurant.js";
-import { getRestaurantMenuByRestaurantId } from "../data/menu.js";
+import {
+  getMenuByRestaurantId,
+  getMenuCategoryByLabelAndRestaurantId,
+} from "../data/menu.js";
 
-import { UUIDSchema, MenuSchema } from "../schemas/schemas.js";
+import {
+  UUIDSchema,
+  MenuSchema,
+  CreateMenuCategoryReqSchema,
+} from "../schemas/schemas.js";
 
 /* *********************** Get Menu Controller *********************** */
 export const getMenu = async (req: Request, res: Response) => {
@@ -30,11 +38,70 @@ export const getMenu = async (req: Request, res: Response) => {
       return sendResponse(res, 403, "invalid session");
     }
 
-    const menu = await getRestaurantMenuByRestaurantId(restaurantId);
+    const menu = await getMenuByRestaurantId(restaurantId);
 
     const validatedMenu = MenuSchema.parse(menu);
 
     sendResponse(res, 200, "menu fetched succesfully", validatedMenu);
+  } catch (error) {
+    console.error(error);
+    return sendResponse(res, 500, "internal server error");
+  }
+};
+
+/* *********************** Add Menu Category Controller *********************** */
+export const addMenuCategory = async (req: Request, res: Response) => {
+  try {
+    // Validate parameter
+    const validatedParameter = UUIDSchema.safeParse(req.params.restaurantId);
+
+    if (!validatedParameter.success) {
+      return sendResponse(res, 400, "invalid parameter values");
+    }
+    const restaurantId = validatedParameter.data;
+
+    // validate req body
+
+    const validatedRequest = CreateMenuCategoryReqSchema.safeParse(req.body);
+
+    if (!validatedRequest.success) {
+      return sendResponse(res, 400, "invalid input or missing fields");
+    }
+
+    const { label } = validatedRequest.data;
+
+    // Check for existing restaurant
+    const existingRestaurant = await getRestaurantById(restaurantId);
+
+    if (!existingRestaurant) {
+      return sendResponse(res, 404, "no restaurant found");
+    }
+
+    // Check if user has permission
+    if (existingRestaurant.business_id !== req.user.id) {
+      return sendResponse(res, 403, "invalid session");
+    }
+
+    // Check if label already exists
+    const existingCategory = await getMenuCategoryByLabelAndRestaurantId(
+      label,
+      restaurantId
+    );
+
+    if (existingCategory) {
+      return sendResponse(res, 409, "label is already registered");
+    }
+
+    // Insert data if its not duplicate label
+
+    const insertQuery = `
+     INSERT INTO menu_category 
+      (restaurant_id, label) VALUES($1, $2)
+     `;
+
+    await pool.query(insertQuery, [restaurantId, label]);
+
+    sendResponse(res, 200, "menu category registered succesfully");
   } catch (error) {
     console.error(error);
     return sendResponse(res, 500, "internal server error");
