@@ -3,9 +3,7 @@ import { pool } from "../db/db.js";
 import { Menu } from "../schemas/types.js";
 import { MenuSchema } from "../schemas/schemas.js";
 
-export const getRestaurantMenuByRestaurantId = async (
-  id: string
-): Promise<Menu> => {
+export const getMenuByRestaurantId = async (id: string): Promise<Menu> => {
   try {
     // Query to fetch menu categories along with their menu items for a specific restaurant
     const query = `
@@ -68,6 +66,35 @@ export const getRestaurantMenuByRestaurantId = async (
     return validatedMenu;
   } catch (error) {
     console.error("Error from getRestaurantMenuByRestaurantId function");
+    throw error;
+  }
+};
+
+export const getMenuCategoryByLabelAndRestaurantId = async (
+  label: string,
+  restaurantId: string
+) => {
+  try {
+    const query = `
+    SELECT
+      id, label
+    FROM
+      menu_category
+    WHERE restaurant_id = $1
+    AND label = $2
+    `;
+
+    const queryResult = await pool.query(query, [restaurantId, label]);
+
+    const data = queryResult.rows[0];
+
+    if (!data) {
+      return null;
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Error from getMenuCategory function");
     throw error;
   }
 };
