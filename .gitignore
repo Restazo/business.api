@@ -1,3 +1,6 @@
 node_modules
 .env
 dist
+public/logos/
+public/covers/
+public/food_items/

@@ -73,6 +73,8 @@ export const MenuSchema = z.array(
   })
 );
 
+export const UUIDSchema = z.string().uuid();
+
 export const EnvSchema = z.object({
   ENV: z.string().min(1),
   API_PORT: z.string().min(1),
@@ -87,4 +89,14 @@ export const EnvSchema = z.object({
   ACCESS_TOKEN_EXPIRY: z.string().min(1),
   REFRESH_TOKEN_EXPIRY: z.string().min(1),
   GOOGLE_ADDRESS_VALIDATION_URL: z.string().min(1),
+  ALLOWED_FILE_TYPES: z.string().min(1),
+  FILE_SIZE_LIMIT: z.string().min(1),
 });
+
+export const EditProfileTextReqSchema = z
+  .object({
+    description: z.string().optional(),
+    affordability: z.number().int().min(1).max(3).optional(),
+    listed: z.boolean().optional(),
+  })
+  .strict();
