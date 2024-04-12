@@ -95,11 +95,7 @@ export const editProfile = async (req: Request, res: Response) => {
     }
 
     // If no data is passed
-    if (
-      !parsedReqBody.data.description &&
-      !parsedReqBody.data.affordability &&
-      !parsedReqBody.data.listed
-    ) {
+    if (Object.keys(parsedReqBody.data).length === 0) {
       return sendResponse(res, 400, "invalid input or missing fields");
     }
 
