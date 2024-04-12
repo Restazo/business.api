@@ -7,6 +7,7 @@ import { getRestaurantById } from "../data/restaurant.js";
 import {
   getMenuByRestaurantId,
   getMenuCategoryByLabelAndRestaurantId,
+  getMenuCategoryById,
 } from "../data/menu.js";
 
 import {
@@ -170,6 +171,55 @@ export const editMenuCategory = async (req: Request, res: Response) => {
     await pool.query(query, [label, menuCategoryId]);
 
     sendResponse(res, 200, "menu category updated succesfully");
+  } catch (error) {
+    console.error(error);
+    return sendResponse(res, 500, "internal server error");
+  }
+};
+
+/* *********************** Delete Menu Category Controller *********************** */
+export const deleteMenuCategory = async (req: Request, res: Response) => {
+  try {
+    // Validate parameter
+    const validatedParameter = UUIDSchema.safeParse(req.params.restaurantId);
+    const validatedParameter2 = UUIDSchema.safeParse(req.params.menuCategoryId);
+
+    if (!validatedParameter.success || !validatedParameter2.success) {
+      return sendResponse(res, 400, "invalid parameter values");
+    }
+    const restaurantId = validatedParameter.data;
+    const menuCategoryId = validatedParameter2.data;
+
+    // Check for existing restaurant
+    const existingRestaurant = await getRestaurantById(restaurantId);
+
+    if (!existingRestaurant) {
+      return sendResponse(res, 404, "no restaurant found");
+    }
+
+    const existingMenuCategory = await getMenuCategoryById(menuCategoryId);
+
+    if (!existingMenuCategory) {
+      return sendResponse(res, 404, "no menu category found");
+    }
+
+    // Check if user has permission
+    if (existingRestaurant.business_id !== req.user.id) {
+      return sendResponse(res, 403, "invalid session");
+    }
+
+    // delete data
+
+    const query = `
+  DELETE FROM
+   menu_category
+  WHERE
+    id = $1
+    `;
+
+    await pool.query(query, [menuCategoryId]);
+
+    sendResponse(res, 200, "menu category deleted succesfully");
   } catch (error) {
     console.error(error);
     return sendResponse(res, 500, "internal server error");
