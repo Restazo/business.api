@@ -98,3 +98,28 @@ export const getMenuCategoryByLabelAndRestaurantId = async (
     throw error;
   }
 };
+
+export const getMenuCategoryById = async (menuCategoryId: string) => {
+  try {
+    const query = `
+    SELECT
+      id, label
+    FROM
+      menu_category
+    WHERE id = $1
+    `;
+
+    const queryResult = await pool.query(query, [menuCategoryId]);
+
+    const data = queryResult.rows[0];
+
+    if (!data) {
+      return null;
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Error from getMenuCategoryById  function");
+    throw error;
+  }
+};
