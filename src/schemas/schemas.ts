@@ -58,24 +58,6 @@ export const ProfileResponseSchema = z.array(
   })
 );
 
-export const MenuItemSchema = z.object({
-  id: z.string().min(1),
-  name: z.string().min(1),
-  image: z.string().nullable(),
-  description: z.string().min(1).nullable(),
-  ingredients: z.string().min(1).nullable(),
-  priceAmount: z.string().min(1),
-  priceCurrency: z.string().min(1),
-});
-
-export const MenuSchema = z.array(
-  z.object({
-    categoryId: z.string().min(1),
-    categoryLabel: z.string().min(1),
-    categoryItems: z.array(MenuItemSchema),
-  })
-);
-
 export const EnvSchema = z.object({
   ENV: z.string().min(1),
   API_PORT: z.string().min(1),
@@ -118,4 +100,28 @@ export const CreateTableReqSchema = z.object({
 export const DeleteTableParamSchema = z.object({
   restaurantId: z.string().uuid(),
   tableId: z.string().uuid(),
+});
+
+/* *********************** Menu schemas *********************** */
+
+export const MenuItemSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1),
+  image: z.string().nullable(),
+  description: z.string().min(1).nullable(),
+  ingredients: z.string().min(1).nullable(),
+  priceAmount: z.string().min(1),
+  priceCurrency: z.string().min(1),
+});
+
+export const MenuSchema = z.array(
+  z.object({
+    categoryId: z.string().min(1),
+    categoryLabel: z.string().min(1),
+    categoryItems: z.array(MenuItemSchema),
+  })
+);
+
+export const CreateOrEditMenuCategoryReqSchema = z.object({
+  label: z.string().min(1),
 });
