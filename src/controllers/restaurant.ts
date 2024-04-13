@@ -95,11 +95,7 @@ export const editProfile = async (req: Request, res: Response) => {
     }
 
     // If no data is passed
-    if (
-      !parsedReqBody.data.description &&
-      !parsedReqBody.data.affordability &&
-      !parsedReqBody.data.listed
-    ) {
+    if (Object.keys(parsedReqBody.data).length === 0) {
       return sendResponse(res, 400, "invalid input or missing fields");
     }
 
@@ -144,6 +140,17 @@ export const editLogo = async (req: Request, res: Response) => {
 
     const newLogoFilePath = `/${req.file?.destination}/${req.file?.filename}`;
     const currentRestaurantData = req.restaurantData;
+
+    // Delete old file
+    // ONLY requied if the mimetype of the new file is different from the current file
+    // IF its the same mimetype multer handles it
+    if (
+      currentRestaurantData.logo_file_path !== null &&
+      newLogoFilePath !== currentRestaurantData.logo_file_path
+    ) {
+      // Delete old file
+      await deleteFile(currentRestaurantData.logo_file_path);
+    }
 
     const newRestaurantData = {
       ...currentRestaurantData,
@@ -222,6 +229,17 @@ export const editCover = async (req: Request, res: Response) => {
     const newCoverFilePath = `/${req.file?.destination}/${req.file?.filename}`;
 
     const currentRestaurantData = req.restaurantData;
+
+    // Delete old file
+    // ONLY requied if the mimetype of the new file is different from the current file
+    // IF its the same mimetype multer handles it
+    if (
+      currentRestaurantData.cover_file_path !== null &&
+      newCoverFilePath !== currentRestaurantData.cover_file_path
+    ) {
+      // Delete old file
+      await deleteFile(currentRestaurantData.cover_file_path);
+    }
 
     const newRestaurantData = {
       ...currentRestaurantData,
