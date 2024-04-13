@@ -19,7 +19,7 @@ export const getMenuByRestaurantId = async (id: string): Promise<Menu> => {
       mi.image AS item_image
     FROM
       menu_category mc
-    JOIN 
+    LEFT JOIN 
       menu_item mi ON mc.id = mi.category_id
     WHERE
       mc.restaurant_id = $1
@@ -47,16 +47,18 @@ export const getMenuByRestaurantId = async (id: string): Promise<Menu> => {
       }
 
       // add items to category
-      const category = menuMap.get(row.id);
-      category.categoryItems.push({
-        id: row.item_id,
-        name: row.item_name,
-        image: `${process.env.ASSETS_URL}${row.item_image}`,
-        description: row.item_description,
-        ingredients: row.item_ingredients,
-        priceAmount: row.item_price_amount,
-        priceCurrency: row.item_price_currency,
-      });
+      if (row.item_id !== null) {
+        const category = menuMap.get(row.id);
+        category.categoryItems.push({
+          id: row.item_id,
+          name: row.item_name,
+          image: `${process.env.ASSETS_URL}${row.item_image}`,
+          description: row.item_description,
+          ingredients: row.item_ingredients,
+          priceAmount: row.item_price_amount,
+          priceCurrency: row.item_price_currency,
+        });
+      }
     });
 
     const menu = Array.from(menuMap.values());
