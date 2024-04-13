@@ -20,7 +20,7 @@ export const validateAddress = async (
       return null;
     }
 
-    const { address_line, locality, postal_code, country_code } =
+    const { address_line, city, postal_code, country_code } =
       validatedFields.data;
 
     // Send request to Google API
@@ -28,7 +28,7 @@ export const validateAddress = async (
     const formattedData = {
       address: {
         regionCode: country_code,
-        addressLines: [`${address_line}, ${locality}, ${postal_code}`],
+        addressLines: [`${address_line}, ${city}, ${postal_code}`],
       },
     };
 
@@ -55,8 +55,8 @@ export const validateAddress = async (
       return null;
     }
 
-    const latitude: number = result.geocode.location.latitude;
-    const longitude: number = result.geocode.location.longitude;
+    const latitude = result.geocode.location.latitude;
+    const longitude = result.geocode.location.longitude;
 
     const extendedAddress: ExtendedAddress = {
       ...validatedFields.data,

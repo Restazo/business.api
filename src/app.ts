@@ -7,7 +7,9 @@ import "./config.js";
 import deserializeUser from "./middleware/deserializeUser.js";
 import authenticationRoutes from "./routes/authenticationRoutes.js";
 import businessRoutes from "./routes/businessRoutes.js";
-import sendResponse from "lib/api-response.js";
+import restaurantRoutes from "./routes/restaurantRoutes.js";
+
+import sendResponse from "./lib/api-response.js";
 
 const app = express();
 
@@ -30,6 +32,8 @@ app.use(express.json());
 
 app.use("/auth", authenticationRoutes);
 app.use("/business", businessRoutes);
+app.use("/restaurants", restaurantRoutes);
+
 
 // Respond if none of the endpoints matched
 app.all("*", (req, res, next) => {
