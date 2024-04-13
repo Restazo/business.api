@@ -2,7 +2,6 @@ import { Router } from "express";
 
 import {
   getRestaurants,
-  getMenu,
   editProfile,
   editLogo,
   deleteLogo,
@@ -16,7 +15,6 @@ const router = Router();
 
 router.get("/", protect, getRestaurants);
 router.put("/:restaurantId/profile", protect, editProfile);
-router.get("/menu", getMenu);
 
 // Logo routes
 router

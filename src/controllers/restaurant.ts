@@ -8,7 +8,6 @@ import {
   getRestaurantById,
   getRestaurantAddressById,
   getRestaurantsByBusinessId,
-  getRestaurantMenuByRestaurantId,
 } from "../data/restaurant.js";
 
 import {
@@ -64,19 +63,6 @@ export const getRestaurants = async (req: Request, res: Response) => {
   }
 };
 
-/* *********************** Get Menu Controller *********************** */
-export const getMenu = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.body;
-
-    const menu = await getRestaurantMenuByRestaurantId(id);
-
-    sendResponse(res, 200, "restaurants fetched succesfully", menu);
-  } catch (error) {
-    console.error(error);
-    return sendResponse(res, 500, "internal server error");
-  }
-};
 /* *********************** Edit Restaurant Text Controller *********************** */
 export const editProfile = async (req: Request, res: Response) => {
   try {

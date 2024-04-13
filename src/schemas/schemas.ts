@@ -1,5 +1,8 @@
 import { z } from "zod";
 
+const toNumber = z.number().or(z.string()).pipe(z.coerce.number());
+export const UUIDSchema = z.string().uuid();
+
 export const AddressSchema = z.object({
   address_line: z.string().min(1),
   city: z.string().min(1),
@@ -73,8 +76,6 @@ export const MenuSchema = z.array(
   })
 );
 
-export const UUIDSchema = z.string().uuid();
-
 export const EnvSchema = z.object({
   ENV: z.string().min(1),
   API_PORT: z.string().min(1),
@@ -100,3 +101,21 @@ export const EditProfileTextReqSchema = z
     listed: z.boolean().optional(),
   })
   .strict();
+
+/* *********************** Table schemas *********************** */
+export const TableSchema = z.object({
+  id: z.string().uuid(),
+  restaurantId: z.string().uuid(),
+  label: z.string().min(1),
+  capacity: toNumber.pipe(z.number().int().min(1).max(30)),
+});
+
+export const CreateTableReqSchema = z.object({
+  label: z.string().min(1),
+  capacity: toNumber.pipe(z.number().int().min(1).max(30)),
+});
+
+export const DeleteTableParamSchema = z.object({
+  restaurantId: z.string().uuid(),
+  tableId: z.string().uuid(),
+});
