@@ -1,8 +1,8 @@
 -- ######################### EXTENTIONS #########################
 
 
--- Ensure the UUID extension is available
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE EXTENSION IF NOT EXISTS plpgsql;
 
 
 -- ######################### ENUMS and TYPES #########################
