@@ -2,14 +2,14 @@ import { z } from "zod";
 
 export const AddressSchema = z.object({
   address_line: z.string().min(1),
-  locality: z.string().min(1),
+  city: z.string().min(1),
   postal_code: z.string().min(1),
   country_code: z.string().min(1),
 });
 
 export const ExtendedAddressSchema = AddressSchema.extend({
-  latitude: z.number().min(1),
-  longitude: z.number().min(1),
+  latitude: z.string().min(1),
+  longitude: z.string().min(1),
 });
 
 export const RegisterSchema = z.object({
@@ -33,12 +33,52 @@ export const BusinessSchema = z.object({
   name: z.string().min(1),
   password: z.string().min(1),
   card: z.string().length(16),
-  refresh_token: z.string().optional(),
+  refresh_token: z.string().nullable(),
 });
+
+export const RestaurantSchema = z.object({
+  id: z.string().min(1),
+  business_id: z.string().min(1),
+  name: z.string().min(1),
+  description: z.string().nullable(),
+  affordability: z.number(),
+  logo_file_path: z.string().nullable(),
+  cover_file_path: z.string().nullable(),
+  listed: z.boolean(),
+});
+
+export const ProfileResponseSchema = z.array(
+  z.object({
+    restaurant: RestaurantSchema.extend({
+      address: ExtendedAddressSchema,
+    }).omit({ business_id: true }),
+  })
+);
+
+export const MenuItemSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1),
+  image: z.string().nullable(),
+  description: z.string().min(1).nullable(),
+  ingredients: z.string().min(1).nullable(),
+  priceAmount: z.string().min(1),
+  priceCurrency: z.string().min(1),
+});
+
+export const MenuSchema = z.array(
+  z.object({
+    categoryId: z.string().min(1),
+    categoryLabel: z.string().min(1),
+    categoryItems: z.array(MenuItemSchema),
+  })
+);
+
+export const UUIDSchema = z.string().uuid();
 
 export const EnvSchema = z.object({
   ENV: z.string().min(1),
   API_PORT: z.string().min(1),
+  ASSETS_URL: z.string().min(1),
   DB_USER: z.string().min(1),
   DB_PWD: z.string().min(1),
   DB_HOST: z.string().min(1),
@@ -49,4 +89,14 @@ export const EnvSchema = z.object({
   ACCESS_TOKEN_EXPIRY: z.string().min(1),
   REFRESH_TOKEN_EXPIRY: z.string().min(1),
   GOOGLE_ADDRESS_VALIDATION_URL: z.string().min(1),
+  ALLOWED_FILE_TYPES: z.string().min(1),
+  FILE_SIZE_LIMIT: z.string().min(1),
 });
+
+export const EditProfileTextReqSchema = z
+  .object({
+    description: z.string().optional(),
+    affordability: z.number().int().min(1).max(3).optional(),
+    listed: z.boolean().optional(),
+  })
+  .strict();

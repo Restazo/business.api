@@ -2,14 +2,14 @@ import { pool } from "../db/db.js";
 
 import { Business } from "../schemas/types.js";
 
-export const getBusinessById = async (id: string) => {
+export const getBusinessById = async (id: string): Promise<Business | null> => {
   try {
     const existingBusiness = await pool.query(
       "SELECT * FROM business WHERE id = $1",
       [id]
     );
 
-    if (existingBusiness.rows.length < 0) {
+    if (existingBusiness.rows.length === 0) {
       return null;
     }
 
@@ -22,14 +22,16 @@ export const getBusinessById = async (id: string) => {
   }
 };
 
-export const getBusinessByEmail = async (email: string) => {
+export const getBusinessByEmail = async (
+  email: string
+): Promise<Business | null> => {
   try {
     const existingBusiness = await pool.query(
       "SELECT * FROM business WHERE email = $1",
       [email]
     );
 
-    if (existingBusiness.rows.length <= 0) {
+    if (existingBusiness.rows.length === 0) {
       return null;
     }
 

@@ -49,5 +49,5 @@ export const updateRefreshToken = async (
 };
 
 export const deleteRefreshToken = async (businessId: string) => {
-  await pool.query("DELETE FROM business WHERE businessID = $1", [businessId]);
+  await pool.query("UPDATE business SET refresh_token = NULL WHERE businessID = $1", [businessId]);
 };
