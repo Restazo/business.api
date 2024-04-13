@@ -51,7 +51,7 @@ export const registerBusiness = async (
       latitude,
       longitude,
       address_line,
-      locality,
+      city,
       postal_code,
       country_code,
     } = address;
@@ -64,7 +64,7 @@ export const registerBusiness = async (
         latitude,
         longitude,
         address_line,
-        locality,
+        city,
         postal_code,
         country_code,
         restaurantId,
