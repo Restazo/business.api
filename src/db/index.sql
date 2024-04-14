@@ -101,8 +101,8 @@ CREATE TABLE menu_item (
 CREATE TABLE waiter (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     restaurant_id UUID NOT NULL,
-    username VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    pin VARCHAR(255) NOT NULL,
     refresh_token VARCHAR(400),
     CONSTRAINT fk_restaurant
         FOREIGN KEY(restaurant_id) 
