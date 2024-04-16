@@ -9,7 +9,7 @@ import {
   deleteCover,
 } from "../controllers/restaurant.js";
 import protect from "../middleware/protect.js";
-import { multerMiddleware } from "../middleware/multer.js";
+import { multerDiskMiddleware } from "../middleware/multer.js";
 
 const router = Router();
 
@@ -19,13 +19,13 @@ router.put("/:restaurantId/profile", protect, editProfile);
 // Logo routes
 router
   .route("/:restaurantId/logo")
-  .post(protect, multerMiddleware("logo"), editLogo)
+  .post(protect, multerDiskMiddleware("logo"), editLogo)
   .delete(protect, deleteLogo);
 
 // Cover routes
 router
   .route("/:restaurantId/cover")
-  .post(protect, multerMiddleware("cover"), editCover)
+  .post(protect, multerDiskMiddleware("cover"), editCover)
   .delete(protect, deleteCover);
 
 export default router;

@@ -5,7 +5,7 @@ const unlinkAsync = promisify(fs.unlink);
 
 const writeFileAsync = promisify(fs.writeFile);
 
-export const deleteImage = async (filePath: string) => {
+export const deleteFile = async (filePath: string) => {
   try {
     await unlinkAsync(`.${filePath}`); // Might need adjustment here in production path looks like this currently:  ./public/logos/example.png
   } catch (error) {
@@ -14,9 +14,7 @@ export const deleteImage = async (filePath: string) => {
   }
 };
 
-
-
-export const uploadImage = async (
+export const uploadFile = async (
   uploadPath: string,
   fileName: string,
   file: Buffer
@@ -28,5 +26,3 @@ export const uploadImage = async (
     throw error;
   }
 };
-
-

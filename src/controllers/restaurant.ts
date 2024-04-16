@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 
 import sendResponse from "../lib/api-response.js";
 import { updateProfile } from "../lib/update-restaurant-profile-new.js";
-import { deleteFile } from "../lib/delete-file.js";
+import { deleteFile } from "../lib/file-utils.js";
 
 import {
   getRestaurantById,
