@@ -85,9 +85,9 @@ CREATE TABLE menu_category (
 CREATE TABLE menu_item (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     category_id UUID NOT NULL,
-    image VARCHAR(255) NOT NULL UNIQUE, -- Should be restaurant_id based: /menu_items/<menu_item_id>.png
+    image VARCHAR(255) DEFAULT NULL UNIQUE, -- Should be restaurant_id based: /menu_items/<menu_item_id>.png
     name VARCHAR(255) NOT NULL,
-    description TEXT NOT NULL,
+    description TEXT,
     ingredients TEXT NOT NULL,
     price_amount NUMERIC(10, 2) NOT NULL,
     price_currency currency_enum NOT NULL,
