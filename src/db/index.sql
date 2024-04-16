@@ -103,6 +103,8 @@ CREATE TABLE waiter (
     restaurant_id UUID NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     pin VARCHAR(255) NOT NULL,
+    confirmation_pin VARCHAR(255),
+    confirmation_pin_created_at TIMESTAMP DEFAULT NOW(),
     refresh_token VARCHAR(400),
     CONSTRAINT fk_restaurant
         FOREIGN KEY(restaurant_id) 
@@ -127,7 +129,7 @@ CREATE TABLE restaurant_order (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     paid BOOLEAN DEFAULT FALSE NOT NULL,
     completed BOOLEAN DEFAULT FALSE NOT NULL,
-    created_at TIMESTAMP DEFAULT now() NOT NULL
+    created_at TIMESTAMP DEFAULT NOW() NOT NULL
 );
 
 -- Creating the 'ongoing_table_orders' table
