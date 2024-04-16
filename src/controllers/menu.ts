@@ -417,7 +417,7 @@ export const editMenuItem = async (req: Request, res: Response) => {
 
       // If request to delete image, and a current image exists. Delete the image
       if (deleteItemImage && currentItemData.image !== null) {
-        await deleteFile(`/${currentItemData.image}`);
+        await deleteFile(`${currentItemData.image}`);
         newItemData.image = null;
       }
 
@@ -457,7 +457,7 @@ export const editMenuItem = async (req: Request, res: Response) => {
         currentItemData.image !== null &&
         currentItemData.image !== newItemImagePath
       ) {
-        await deleteFile(`/${currentItemData.image}`);
+        await deleteFile(`${currentItemData.image}`);
       }
 
       // Upload new image to storage
@@ -484,5 +484,76 @@ export const editMenuItem = async (req: Request, res: Response) => {
     return sendResponse(res, 500, "internal server error");
   } finally {
     client.release();
+  }
+};
+
+/* *********************** Delete Menu Category Controller *********************** */
+export const deleteMenuItem = async (req: Request, res: Response) => {
+  try {
+    // Validate parameter
+    const validatedParameter = UUIDSchema.safeParse(req.params.restaurantId);
+    const validatedParameter2 = UUIDSchema.safeParse(req.params.menuCategoryId);
+    const validatedParameter3 = UUIDSchema.safeParse(req.params.menuItemId);
+
+    if (
+      !validatedParameter.success ||
+      !validatedParameter2.success ||
+      !validatedParameter3.success
+    ) {
+      return sendResponse(res, 400, "invalid parameter values");
+    }
+
+    const restaurantId = validatedParameter.data;
+    const menuCategoryId = validatedParameter2.data;
+    const menuItemId = validatedParameter3.data;
+
+    // Check for existing restaurant
+    const existingRestaurant = await getRestaurantById(restaurantId);
+
+    if (!existingRestaurant) {
+      return sendResponse(res, 404, "no restaurant found");
+    }
+
+    // Check if user has permission
+    if (existingRestaurant.business_id !== req.user.id) {
+      return sendResponse(res, 403, "invalid session");
+    }
+
+    // Check if the menu category exists within the provided restaurant
+    const existingMenuCategory = await getMenuCategoryById(menuCategoryId);
+
+    if (
+      !existingMenuCategory ||
+      existingMenuCategory.restaurantId !== existingRestaurant.id
+    ) {
+      return sendResponse(res, 404, "no menu category found");
+    }
+
+    // Check if item exists within the provided category
+    const currentItemData = await getMenuItemById(menuItemId);
+
+    if (!currentItemData || currentItemData.categoryId !== menuCategoryId) {
+      return sendResponse(res, 404, "no menu item found");
+    }
+
+    // Delete image if it exists
+    if (currentItemData.image !== null) {
+      await deleteFile(currentItemData.image);
+    }
+
+    // delete menu item
+    const query = `
+      DELETE FROM
+        menu_item
+      WHERE
+        id = $1
+    `;
+
+    await pool.query(query, [menuItemId]);
+
+    sendResponse(res, 200, "menu item deleted succesfully");
+  } catch (error) {
+    console.error(error);
+    return sendResponse(res, 500, "internal server error");
   }
 };
