@@ -5,8 +5,11 @@ import {
   addMenuCategory,
   editMenuCategory,
   deleteMenuCategory,
+  addMenuItem,
+  editMenuItem,
 } from "../controllers/menu.js";
 import protect from "../middleware/protect.js";
+import { multerMemoryMiddleware } from "../middleware/multer.js";
 
 const router = Router();
 
@@ -18,4 +21,17 @@ router
   .put(protect, editMenuCategory)
   .delete(protect, deleteMenuCategory);
 
+router.post(
+  "/:restaurantId/menu/category/:menuCategoryId/item",
+  protect,
+  multerMemoryMiddleware("itemImage"),
+  addMenuItem
+);
+
+router.put(
+  "/:restaurantId/menu/category/:menuCategoryId/item/:menuItemId",
+  protect,
+  multerMemoryMiddleware("itemImage"),
+  editMenuItem
+);
 export default router;
