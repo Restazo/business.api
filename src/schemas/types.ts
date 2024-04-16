@@ -9,6 +9,7 @@ import {
   MenuSchema,
   TableSchema,
   MenuItemSchema,
+  MenuCategorySchema,
 } from "./schemas.js";
 
 export type JwtCustomPayload = JwtPayload & {
@@ -28,6 +29,8 @@ export type Restaurant = z.infer<typeof RestaurantSchema>;
 export type Menu = z.infer<typeof MenuSchema>;
 
 export type MenuItem = z.infer<typeof MenuItemSchema>;
+
+export type MenuCategory = z.infer<typeof MenuCategorySchema>;
 
 export type Table = z.infer<typeof TableSchema>;
 

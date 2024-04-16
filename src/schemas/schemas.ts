@@ -121,6 +121,12 @@ export const MenuItemSchema = z.object({
   priceCurrency: z.enum(["eur", "usd"]),
 });
 
+export const MenuCategorySchema = z.object({
+  id: UUIDSchema,
+  restaurantId: UUIDSchema,
+  label: z.string().min(1),
+});
+
 export const MenuSchema = z.array(
   z.object({
     categoryId: UUIDSchema,
