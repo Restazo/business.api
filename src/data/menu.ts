@@ -168,34 +168,4 @@ export const getMenuItemById = async (
   }
 };
 
-export const getMenuItemByName = async (
-  menuItemName: string
-): Promise<MenuItem | null> => {
-  try {
-    const query = `
-    SELECT
-      id, name, image, description, ingredients,
-      category_id AS "categoryId",
-      price_amount AS "priceAmount",
-      price_currency AS "priceCurrency"
-    FROM
-      menu_item
-    WHERE name = $1
-    `;
 
-    const queryResult = await pool.query(query, [menuItemName]);
-
-    const data = queryResult.rows[0];
-
-    if (!data) {
-      return null;
-    }
-
-    const validatedData = MenuItemSchema.parse(data);
-
-    return validatedData;
-  } catch (error) {
-    console.error("Error from getMenuItemByName function");
-    throw error;
-  }
-};
