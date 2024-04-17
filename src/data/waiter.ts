@@ -8,7 +8,7 @@ export const getWaiterByEmail = async (
 ): Promise<Waiter | null> => {
   try {
     const query = `
-      SELECT id, email, name
+      SELECT id, email, name, restaurant_id AS "restaurantId"
       FROM waiter 
       WHERE email = $1
     `;
@@ -35,7 +35,7 @@ export const getWaiterById = async (
 ): Promise<Waiter | null> => {
   try {
     const query = `
-      SELECT id, email, name
+      SELECT id, email, name, restaurant_id AS "restaurantId"
       FROM waiter 
       WHERE id = $1
     `;
@@ -59,7 +59,7 @@ export const getWaiterById = async (
 
 export const getWaitersByRestaurantId = async (
   restaurantId: string
-): Promise<Waiter[] | []> => {
+): Promise<Omit<Waiter, "restaurantId">[] | []> => {
   try {
     const query = `
       SELECT id, email, name
@@ -77,7 +77,9 @@ export const getWaitersByRestaurantId = async (
       ...waiter,
     }));
 
-    const validatedData = WaiterSchema.array().parse(data);
+    const validatedData = WaiterSchema.omit({ restaurantId: true })
+      .array()
+      .parse(data);
 
     return validatedData;
   } catch (error) {
