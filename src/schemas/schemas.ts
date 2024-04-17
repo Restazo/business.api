@@ -119,3 +119,19 @@ export const DeleteTableParamSchema = z.object({
   restaurantId: z.string().uuid(),
   tableId: z.string().uuid(),
 });
+
+/* *********************** Waiter schemas *********************** */
+export const WaiterSchema = z.object({
+  id: UUIDSchema,
+  email: z.string().email(),
+  name: z.string().min(1),
+});
+
+export const RegisterWaiterReqSchema = z.object({
+  email: z.string().email(),
+  name: z.string().min(1),
+});
+
+export const RegisterWaiterResSchema = RegisterWaiterReqSchema.extend({
+  pin: z.string().length(5),
+});

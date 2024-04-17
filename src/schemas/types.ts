@@ -8,6 +8,7 @@ import {
   RestaurantSchema,
   MenuSchema,
   TableSchema,
+  WaiterSchema,
 } from "./schemas.js";
 
 export type JwtCustomPayload = JwtPayload & {
@@ -27,6 +28,8 @@ export type Restaurant = z.infer<typeof RestaurantSchema>;
 export type Menu = z.infer<typeof MenuSchema>;
 
 export type Table = z.infer<typeof TableSchema>;
+
+export type Waiter = z.infer<typeof WaiterSchema>;
 
 export type AddressValidationResult = {
   data?: ExtendedAddress;
