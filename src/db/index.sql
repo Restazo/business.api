@@ -85,9 +85,9 @@ CREATE TABLE menu_category (
 CREATE TABLE menu_item (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     category_id UUID NOT NULL,
-    image VARCHAR(255) NOT NULL UNIQUE, -- Should be restaurant_id based: /menu_items/<menu_item_id>.png
+    image VARCHAR(255) DEFAULT NULL UNIQUE, -- Should be restaurant_id based: /menu_items/<menu_item_id>.png
     name VARCHAR(255) NOT NULL,
-    description TEXT NOT NULL,
+    description TEXT,
     ingredients TEXT NOT NULL,
     price_amount NUMERIC(10, 2) NOT NULL,
     price_currency currency_enum NOT NULL,
@@ -101,8 +101,10 @@ CREATE TABLE menu_item (
 CREATE TABLE waiter (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     restaurant_id UUID NOT NULL,
-    username VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    pin VARCHAR(255) NOT NULL,
+    confirmation_pin VARCHAR(255),
+    confirmation_pin_created_at TIMESTAMP DEFAULT NOW(),
     refresh_token VARCHAR(400),
     CONSTRAINT fk_restaurant
         FOREIGN KEY(restaurant_id) 
@@ -127,7 +129,7 @@ CREATE TABLE restaurant_order (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     paid BOOLEAN DEFAULT FALSE NOT NULL,
     completed BOOLEAN DEFAULT FALSE NOT NULL,
-    created_at TIMESTAMP DEFAULT now() NOT NULL
+    created_at TIMESTAMP DEFAULT NOW() NOT NULL
 );
 
 -- Creating the 'ongoing_table_orders' table
