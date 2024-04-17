@@ -123,6 +123,7 @@ export const DeleteTableParamSchema = z.object({
 /* *********************** Waiter schemas *********************** */
 export const WaiterSchema = z.object({
   id: UUIDSchema,
+  restaurantId: UUIDSchema,
   email: z.string().email(),
   name: z.string().min(1),
 });
