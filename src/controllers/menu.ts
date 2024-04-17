@@ -413,8 +413,6 @@ export const editMenuItem = async (req: Request, res: Response) => {
         ...dataToUpdate,
       };
 
-      console.log(newItemData);
-
       // If request to delete image, and a current image exists. Delete the image
       if (deleteItemImage && currentItemData.image !== null) {
         await deleteFile(`${currentItemData.image}`);

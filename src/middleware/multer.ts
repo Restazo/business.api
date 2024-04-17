@@ -104,8 +104,6 @@ export const multerDiskMiddleware =
       return sendResponse(res, 400, "invalid parameter values");
     }
 
-    console.log(req.body);
-
     const restaurantId = validatedParameter.data;
 
     const restaurantData = await getRestaurantById(restaurantId);

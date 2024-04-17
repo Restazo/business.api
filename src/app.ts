@@ -4,6 +4,7 @@ import cors from "cors";
 import morgan from "morgan";
 import "./config.js";
 
+import trimRequestMiddleware from "./middleware/trimRequest.js";
 import deserializeUser from "./middleware/deserializeUser.js";
 import authenticationRoutes from "./routes/authenticationRoutes.js";
 import businessRoutes from "./routes/businessRoutes.js";
@@ -31,6 +32,7 @@ app.use(
 app.use(deserializeUser); // use this middleware in every route
 
 app.use(express.json());
+app.use(trimRequestMiddleware);
 
 app.use("/auth", authenticationRoutes);
 app.use("/business", businessRoutes);
