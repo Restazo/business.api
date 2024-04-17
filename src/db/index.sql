@@ -102,6 +102,7 @@ CREATE TABLE waiter (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     restaurant_id UUID NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
+    name VARCHAR(255) NOT NULL,
     pin VARCHAR(255) NOT NULL,
     confirmation_pin VARCHAR(255),
     confirmation_pin_created_at TIMESTAMP DEFAULT NOW(),
