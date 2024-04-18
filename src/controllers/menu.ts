@@ -204,24 +204,26 @@ export const deleteMenuCategory = async (req: Request, res: Response) => {
       return sendResponse(res, 404, "no restaurant found");
     }
 
-    const existingMenuCategory = await getMenuCategoryById(menuCategoryId);
-
-    if (!existingMenuCategory) {
-      return sendResponse(res, 404, "no menu category found");
-    }
-
     // Check if user has permission
     if (existingRestaurant.business_id !== req.user.id) {
       return sendResponse(res, 403, "invalid session");
     }
 
-    // delete data
+    const existingMenuCategory = await getMenuCategoryById(menuCategoryId);
 
+    if (
+      !existingMenuCategory ||
+      existingMenuCategory.restaurantId !== existingRestaurant.id
+    ) {
+      return sendResponse(res, 404, "no menu category found");
+    }
+
+    // delete menu category
     const query = `
-  DELETE FROM
-   menu_category
-  WHERE
-    id = $1
+      DELETE FROM
+        menu_category
+      WHERE
+        id = $1
     `;
 
     await pool.query(query, [menuCategoryId]);
