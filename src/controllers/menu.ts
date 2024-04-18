@@ -235,29 +235,28 @@ export const deleteMenuCategory = async (req: Request, res: Response) => {
 
 /* *********************** Add Menu Item Controller *********************** */
 export const addMenuItem = async (req: Request, res: Response) => {
+  // Validate parameter
+  const validatedParameter = UUIDSchema.safeParse(req.params.restaurantId);
+  const validatedParameter2 = UUIDSchema.safeParse(req.params.menuCategoryId);
+
+  if (!validatedParameter.success || !validatedParameter2.success) {
+    return sendResponse(res, 400, "invalid parameter values");
+  }
+
+  // Validate body and file
+  const validatedRequest = AddMenuItemReqSchema.safeParse(req.body);
+
+  if (!validatedRequest.success) {
+    return sendResponse(res, 400, "invalid input or missing fields");
+  }
+
+  const requestData = validatedRequest.data;
+  const restaurantId = validatedParameter.data;
+  const menuCategoryId = validatedParameter2.data;
+
   const client = await pool.connect();
+
   try {
-    // Validate parameter
-    const validatedParameter = UUIDSchema.safeParse(req.params.restaurantId);
-    const validatedParameter2 = UUIDSchema.safeParse(req.params.menuCategoryId);
-
-    if (!validatedParameter.success || !validatedParameter2.success) {
-      return sendResponse(res, 400, "invalid parameter values");
-    }
-
-    // Validate body and file
-
-    const validatedRequest = AddMenuItemReqSchema.safeParse(req.body);
-
-    if (!validatedRequest.success) {
-      return sendResponse(res, 400, "invalid input or missing fields");
-    }
-
-    const requestData = validatedRequest.data;
-
-    const restaurantId = validatedParameter.data;
-    const menuCategoryId = validatedParameter2.data;
-
     // Check for existing restaurant
     const existingRestaurant = await getRestaurantById(restaurantId);
 
@@ -335,44 +334,44 @@ export const addMenuItem = async (req: Request, res: Response) => {
 
 /* *********************** Edit Menu Item Controller *********************** */
 export const editMenuItem = async (req: Request, res: Response) => {
+  // Validate parameters
+  const validatedParameter = UUIDSchema.safeParse(req.params.restaurantId);
+  const validatedParameter2 = UUIDSchema.safeParse(req.params.menuCategoryId);
+  const validatedParameter3 = UUIDSchema.safeParse(req.params.menuItemId);
+
+  if (
+    !validatedParameter.success ||
+    !validatedParameter2.success ||
+    !validatedParameter3.success
+  ) {
+    return sendResponse(res, 400, "invalid parameter values");
+  }
+
+  const restaurantId = validatedParameter.data;
+  const menuCategoryId = validatedParameter2.data;
+  const menuItemId = validatedParameter3.data;
+
+  // Validate body and file
+  const validatedRequest = EditMenuItemReqSchema.safeParse(req.body);
+
+  if (!validatedRequest.success) {
+    return sendResponse(res, 400, "invalid input or missing fields");
+  }
+
+  const requestData = validatedRequest.data;
+
+  // If nothing was passed on the request
+  if (Object.keys(requestData).length === 0 && !req.file) {
+    return sendResponse(res, 400, "invalid input or missing fields");
+  }
+
+  // If conflicting requests (delete image and a file was passed)
+  if (requestData.deleteItemImage && req.file) {
+    return sendResponse(res, 400, "invalid input or missing fields");
+  }
+
   const client = await pool.connect();
   try {
-    // Validate parameters
-    const validatedParameter = UUIDSchema.safeParse(req.params.restaurantId);
-    const validatedParameter2 = UUIDSchema.safeParse(req.params.menuCategoryId);
-    const validatedParameter3 = UUIDSchema.safeParse(req.params.menuItemId);
-
-    if (
-      !validatedParameter.success ||
-      !validatedParameter2.success ||
-      !validatedParameter3.success
-    ) {
-      return sendResponse(res, 400, "invalid parameter values");
-    }
-
-    const restaurantId = validatedParameter.data;
-    const menuCategoryId = validatedParameter2.data;
-    const menuItemId = validatedParameter3.data;
-
-    // Validate body and file
-    const validatedRequest = EditMenuItemReqSchema.safeParse(req.body);
-
-    if (!validatedRequest.success) {
-      return sendResponse(res, 400, "invalid input or missing fields");
-    }
-
-    const requestData = validatedRequest.data;
-
-    // If nothing was passed on the request
-    if (Object.keys(requestData).length === 0 && !req.file) {
-      return sendResponse(res, 400, "invalid input or missing fields");
-    }
-
-    // If conflicting requests (delete image and a file was passed)
-    if (requestData.deleteItemImage && req.file) {
-      return sendResponse(res, 400, "invalid input or missing fields");
-    }
-
     // Check for existing restaurant
     const existingRestaurant = await getRestaurantById(restaurantId);
 
