@@ -1,5 +1,5 @@
 import multer from "multer";
-import path from 'path';
+import path from "path";
 
 import { Request, Response, NextFunction } from "express";
 
@@ -22,7 +22,7 @@ const fileFilter = (req: Request, file: Express.Multer.File, cb: any) => {
 };
 
 // Define storage
-const storage = multer.diskStorage({
+const diskStorage = multer.diskStorage({
   // Here we define paths for different fieldnames
   destination: (req, file, cb) => {
     let uploadPath = "public/";
@@ -38,20 +38,64 @@ const storage = multer.diskStorage({
   // Here we define the filename to be stored
   filename: (req, file, cb) => {
     const extension = path.extname(file.originalname);
-    const restaurantId = req.params.restaurantId
+    const restaurantId = req.params.restaurantId;
     cb(null, `${restaurantId}${extension}`);
   },
 });
 
-export const upload = multer({
-  storage: storage,
+const diskUpload = multer({
+  storage: diskStorage,
+  fileFilter: fileFilter,
+  // Define the size limit here,
+  limits: { fileSize: Number(process.env.FILE_SIZE_LIMIT) },
+});
+
+// Define storage
+const memoryStorage = multer.memoryStorage();
+
+const memoryUpload = multer({
+  storage: memoryStorage,
   fileFilter: fileFilter,
   // Define the size limit here,
   limits: { fileSize: Number(process.env.FILE_SIZE_LIMIT) },
 });
 
 // Custom middleware function to enable catching errors
-export const multerMiddleware =
+export const multerMemoryMiddleware =
+  (fieldName: string) =>
+  async (req: Request, res: Response, next: NextFunction) => {
+    // Use multer to store the file provided
+    memoryUpload.single(fieldName)(req, res, (error) => {
+      // Check if any multerError on req
+      if (req.multerError) {
+        const data = JSON.parse(process.env.ALLOWED_FILE_TYPES);
+        return sendResponse(res, 400, req.multerError, {
+          supportedFormats: data,
+        });
+      }
+
+      if (error instanceof multer.MulterError) {
+        if (error.code === "LIMIT_FILE_SIZE") {
+          const sizeLimit = Number(process.env.FILE_SIZE_LIMIT);
+          return sendResponse(res, 400, `file size exceeded the size limit`, {
+            sizeLimitInBytes: sizeLimit,
+          });
+        }
+        if (error.code === "LIMIT_UNEXPECTED_FILE") {
+          return sendResponse(res, 400, "invalid input or missing fields");
+        }
+        console.error(error);
+        return sendResponse(res, 400, `${error.message?.toLowerCase()}`, error);
+      } else if (error) {
+        console.error(error);
+        return sendResponse(res, 500, "internal server error");
+      }
+      next();
+    });
+  };
+
+// Custom middleware function to enable catching errors
+export const multerDiskMiddleware =
   (fieldName: string) =>
   async (req: Request, res: Response, next: NextFunction) => {
     const validatedParameter = UUIDSchema.safeParse(req.params.restaurantId);
@@ -76,7 +120,7 @@ export const multerMiddleware =
     req.restaurantData = restaurantData;
 
     // Use multer to store the file provided
-    upload.single(fieldName)(req, res, (error) => {
+    diskUpload.single(fieldName)(req, res, (error) => {
       // Check if any multerError on req
       if (req.multerError) {
         const data = JSON.parse(process.env.ALLOWED_FILE_TYPES);
