@@ -10,6 +10,7 @@ import authenticationRoutes from "./routes/authenticationRoutes.js";
 import businessRoutes from "./routes/businessRoutes.js";
 import restaurantRoutes from "./routes/restaurantRoutes.js";
 import tableRoutes from "./routes/tableRoutes.js";
+import waiterRoutes from "./routes/waiterRoutes.js";
 import menuRoutes from "./routes/menuRoutes.js";
 
 import sendResponse from "./lib/api-response.js";
@@ -36,7 +37,14 @@ app.use(trimRequestMiddleware);
 
 app.use("/auth", authenticationRoutes);
 app.use("/business", businessRoutes);
-app.use("/restaurants", restaurantRoutes, tableRoutes, menuRoutes);
+
+app.use(
+  "/restaurants",
+  restaurantRoutes,
+  tableRoutes,
+  menuRoutes,
+  waiterRoutes
+);
 
 // Respond if none of the endpoints matched
 app.all("*", (req, res, next) => {
