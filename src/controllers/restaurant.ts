@@ -92,6 +92,11 @@ export const editProfile = async (req: Request, res: Response) => {
       return sendResponse(res, 404, "no restaurant found");
     }
 
+    // Check if user has permission
+    if (currentRestaurantData.business_id !== req.user.id) {
+      return sendResponse(res, 403, "invalid session");
+    }
+
     // Attach new data to the object
 
     const newRestaurantData = {
