@@ -8,6 +8,8 @@ import {
   RestaurantSchema,
   MenuSchema,
   TableSchema,
+  MenuItemSchema,
+  MenuCategorySchema,
   WaiterSchema,
 } from "./schemas.js";
 
@@ -26,6 +28,10 @@ export type Business = z.infer<typeof BusinessSchema>;
 export type Restaurant = z.infer<typeof RestaurantSchema>;
 
 export type Menu = z.infer<typeof MenuSchema>;
+
+export type MenuItem = z.infer<typeof MenuItemSchema>;
+
+export type MenuCategory = z.infer<typeof MenuCategorySchema>;
 
 export type Table = z.infer<typeof TableSchema>;
 

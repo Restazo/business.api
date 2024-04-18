@@ -35,7 +35,7 @@ export const createTable = async (req: Request, res: Response) => {
       return sendResponse(res, 404, "no restaurant found");
     }
 
-    // TODO CHECK IF USER HAS PERMISSION
+    // Check if user has permission
     if (existingRestaurant.business_id !== req.user.id) {
       return sendResponse(res, 403, "invalid session");
     }
@@ -134,7 +134,7 @@ export const getTables = async (req: Request, res: Response) => {
       return sendResponse(res, 404, "no restaurant found");
     }
 
-    // TODO CHECK IF USER HAS PERMISSION
+    // Check if user has permission
     if (existingRestaurant.business_id !== req.user.id) {
       return sendResponse(res, 403, "invalid session");
     }
