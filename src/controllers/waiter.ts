@@ -6,7 +6,7 @@ import sendResponse from "../lib/api-response.js";
 import { generatePin } from "../lib/generate-pin.js";
 import { getRestaurantById } from "../data/restaurant.js";
 import {
-  getWaiterByEmail,
+  getWaiterByEmailAndRestaurantId,
   getWaiterById,
   getWaitersByRestaurantId,
 } from "../data/waiter.js";
@@ -50,7 +50,10 @@ export const registerWaiter = async (req: Request, res: Response) => {
     }
 
     // Check if email is already registered
-    const existingWaiter = await getWaiterByEmail(email);
+    const existingWaiter = await getWaiterByEmailAndRestaurantId(
+      email,
+      restaurantId
+    );
 
     if (existingWaiter) {
       return sendResponse(res, 409, "email is already registered");
