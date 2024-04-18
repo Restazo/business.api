@@ -3,17 +3,19 @@ import { pool } from "../db/db.js";
 import { Waiter } from "../schemas/types.js";
 import { WaiterSchema } from "../schemas/schemas.js";
 
-export const getWaiterByEmail = async (
-  email: string
+export const getWaiterByEmailAndRestaurantId = async (
+  email: string,
+  restaurantId: string
 ): Promise<Waiter | null> => {
   try {
     const query = `
       SELECT id, email, name, restaurant_id AS "restaurantId"
       FROM waiter 
       WHERE email = $1
+      AND restaurant_id = $2
     `;
 
-    const queryResult = await pool.query(query, [email]);
+    const queryResult = await pool.query(query, [email, restaurantId]);
 
     const data = queryResult.rows[0];
 
