@@ -1,6 +1,9 @@
 import { z } from "zod";
 
 const toNumber = z.number().or(z.string()).pipe(z.coerce.number());
+const PriceSchema = toNumber.refine(
+  (value) => value == parseFloat(value.toFixed(2)) && value >= 0
+);
 export const UUIDSchema = z.string().uuid();
 
 export const AddressSchema = z.object({
@@ -31,7 +34,7 @@ export const LoginSchema = z.object({
 });
 
 export const BusinessSchema = z.object({
-  id: z.string().min(1),
+  id: UUIDSchema,
   email: z.string().email(),
   name: z.string().min(1),
   password: z.string().min(1),
@@ -40,8 +43,8 @@ export const BusinessSchema = z.object({
 });
 
 export const RestaurantSchema = z.object({
-  id: z.string().min(1),
-  business_id: z.string().min(1),
+  id: UUIDSchema,
+  business_id: UUIDSchema,
   name: z.string().min(1),
   description: z.string().nullable(),
   affordability: z.number(),
@@ -74,6 +77,9 @@ export const EnvSchema = z.object({
   GOOGLE_ADDRESS_VALIDATION_URL: z.string().min(1),
   ALLOWED_FILE_TYPES: z.string().min(1),
   FILE_SIZE_LIMIT: z.string().min(1),
+  ITEM_IMAGE_UPLOAD_PATH: z.string().min(1),
+  COVER_IMAGE_UPLOAD_PATH: z.string().min(1),
+  LOGO_IMAGE_UPLOAD_PATH: z.string().min(1),
 });
 
 export const EditProfileTextReqSchema = z
@@ -86,8 +92,8 @@ export const EditProfileTextReqSchema = z
 
 /* *********************** Table schemas *********************** */
 export const TableSchema = z.object({
-  id: z.string().uuid(),
-  restaurantId: z.string().uuid(),
+  id: UUIDSchema,
+  restaurantId: UUIDSchema,
   label: z.string().min(1),
   capacity: toNumber.pipe(z.number().int().min(1).max(30)),
 });
@@ -98,30 +104,57 @@ export const CreateTableReqSchema = z.object({
 });
 
 export const DeleteTableParamSchema = z.object({
-  restaurantId: z.string().uuid(),
-  tableId: z.string().uuid(),
+  restaurantId: UUIDSchema,
+  tableId: UUIDSchema,
 });
 
 /* *********************** Menu schemas *********************** */
 
 export const MenuItemSchema = z.object({
-  id: z.string().min(1),
+  id: UUIDSchema,
+  categoryId: UUIDSchema,
   name: z.string().min(1),
   image: z.string().nullable(),
   description: z.string().min(1).nullable(),
-  ingredients: z.string().min(1).nullable(),
-  priceAmount: z.string().min(1),
-  priceCurrency: z.string().min(1),
+  ingredients: z.string().min(3),
+  priceAmount: PriceSchema,
+  priceCurrency: z.enum(["eur", "usd"]),
+});
+
+export const MenuCategorySchema = z.object({
+  id: UUIDSchema,
+  restaurantId: UUIDSchema,
+  label: z.string().min(1),
 });
 
 export const MenuSchema = z.array(
   z.object({
-    categoryId: z.string().min(1),
+    categoryId: UUIDSchema,
     categoryLabel: z.string().min(1),
-    categoryItems: z.array(MenuItemSchema),
+    categoryItems: z.array(MenuItemSchema.omit({ categoryId: true })),
   })
 );
 
 export const CreateOrEditMenuCategoryReqSchema = z.object({
   label: z.string().min(1),
+});
+
+export const AddMenuItemReqSchema = z.object({
+  name: z.string().min(1),
+  description: z.string().optional(),
+  ingredients: z.string().min(3),
+  priceAmount: PriceSchema,
+  priceCurrency: z.enum(["eur", "usd"]),
+});
+
+export const EditMenuItemReqSchema = z.object({
+  name: z.string().min(1).optional(),
+  description: z.string().optional(),
+  ingredients: z.string().min(3).optional(),
+  priceAmount: PriceSchema.optional(),
+  priceCurrency: z.enum(["eur", "usd"]).optional(),
+  deleteItemImage: z
+    .string()
+    .refine((value) => value === "true")
+    .optional(),
 });

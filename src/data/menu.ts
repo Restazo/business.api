@@ -1,7 +1,11 @@
 import { pool } from "../db/db.js";
 
-import { Menu } from "../schemas/types.js";
-import { MenuSchema } from "../schemas/schemas.js";
+import { Menu, MenuItem, MenuCategory } from "../schemas/types.js";
+import {
+  MenuSchema,
+  MenuItemSchema,
+  MenuCategorySchema,
+} from "../schemas/schemas.js";
 
 export const getMenuByRestaurantId = async (id: string): Promise<Menu> => {
   try {
@@ -75,11 +79,11 @@ export const getMenuByRestaurantId = async (id: string): Promise<Menu> => {
 export const getMenuCategoryByLabelAndRestaurantId = async (
   label: string,
   restaurantId: string
-) => {
+): Promise<MenuCategory | null> => {
   try {
     const query = `
     SELECT
-      id, label
+    id, label, restaurant_id AS "restaurantId"
     FROM
       menu_category
     WHERE restaurant_id = $1
@@ -94,18 +98,22 @@ export const getMenuCategoryByLabelAndRestaurantId = async (
       return null;
     }
 
-    return data;
+    const validatedData = MenuCategorySchema.parse(data);
+
+    return validatedData;
   } catch (error) {
     console.error("Error from getMenuCategory function");
     throw error;
   }
 };
 
-export const getMenuCategoryById = async (menuCategoryId: string) => {
+export const getMenuCategoryById = async (
+  menuCategoryId: string
+): Promise<MenuCategory | null> => {
   try {
     const query = `
     SELECT
-      id, label
+      id, label, restaurant_id AS "restaurantId"
     FROM
       menu_category
     WHERE id = $1
@@ -119,9 +127,45 @@ export const getMenuCategoryById = async (menuCategoryId: string) => {
       return null;
     }
 
-    return data;
+    const validatedData = MenuCategorySchema.parse(data);
+
+    return validatedData;
   } catch (error) {
     console.error("Error from getMenuCategoryById  function");
     throw error;
   }
 };
+
+export const getMenuItemById = async (
+  menuItemId: string
+): Promise<MenuItem | null> => {
+  try {
+    const query = `
+    SELECT
+      id, name, image, description, ingredients,
+      category_id AS "categoryId",
+      price_amount AS "priceAmount",
+      price_currency AS "priceCurrency"
+    FROM
+      menu_item
+    WHERE id = $1
+    `;
+
+    const queryResult = await pool.query(query, [menuItemId]);
+
+    const data = queryResult.rows[0];
+
+    if (!data) {
+      return null;
+    }
+
+    const validatedData = MenuItemSchema.parse(data);
+
+    return validatedData;
+  } catch (error) {
+    console.error("Error from getMenuItemById  function");
+    throw error;
+  }
+};
+
+
