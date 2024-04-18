@@ -10,6 +10,7 @@ import {
   TableSchema,
   MenuItemSchema,
   MenuCategorySchema,
+  WaiterSchema,
 } from "./schemas.js";
 
 export type JwtCustomPayload = JwtPayload & {
@@ -33,6 +34,8 @@ export type MenuItem = z.infer<typeof MenuItemSchema>;
 export type MenuCategory = z.infer<typeof MenuCategorySchema>;
 
 export type Table = z.infer<typeof TableSchema>;
+
+export type Waiter = z.infer<typeof WaiterSchema>;
 
 export type AddressValidationResult = {
   data?: ExtendedAddress;

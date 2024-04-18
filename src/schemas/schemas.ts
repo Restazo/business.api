@@ -158,3 +158,20 @@ export const EditMenuItemReqSchema = z.object({
     .refine((value) => value === "true")
     .optional(),
 });
+
+/* *********************** Waiter schemas *********************** */
+export const WaiterSchema = z.object({
+  id: UUIDSchema,
+  restaurantId: UUIDSchema,
+  email: z.string().email(),
+  name: z.string().min(1),
+});
+
+export const RegisterWaiterReqSchema = z.object({
+  email: z.string().email(),
+  name: z.string().min(1),
+});
+
+export const RegisterWaiterResSchema = RegisterWaiterReqSchema.extend({
+  pin: z.string().length(5),
+});
