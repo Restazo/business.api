@@ -98,7 +98,10 @@ export const deleteTable = async (req: Request, res: Response) => {
 
     const existingTable = await getTableById(tableId);
 
-    if (!existingTable) {
+    if (
+      !existingTable ||
+      existingTable.restaurantId !== existingRestaurant.id
+    ) {
       return sendResponse(res, 404, "no table found");
     }
 
