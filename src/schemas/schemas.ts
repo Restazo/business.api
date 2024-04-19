@@ -6,6 +6,7 @@ const PriceSchema = toNumber.refine(
 );
 export const UUIDSchema = z.string().uuid();
 
+/* *********************** Address schemas *********************** */
 export const AddressSchema = z.object({
   address_line: z.string().min(1),
   city: z.string().min(1),
@@ -13,11 +14,14 @@ export const AddressSchema = z.object({
   country_code: z.string().min(1),
 });
 
-export const ExtendedAddressSchema = AddressSchema.extend({
+export const CoordsSchema = z.object({
   latitude: z.string().min(1),
   longitude: z.string().min(1),
 });
 
+export const ExtendedAddressSchema = AddressSchema.merge(CoordsSchema);
+
+/* *********************** Auth schemas *********************** */
 export const RegisterSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8),
@@ -33,6 +37,7 @@ export const LoginSchema = z.object({
   password: z.string().min(1),
 });
 
+/* *********************** Business schemas *********************** */
 export const BusinessSchema = z.object({
   id: UUIDSchema,
   email: z.string().email(),
@@ -42,6 +47,7 @@ export const BusinessSchema = z.object({
   refresh_token: z.string().nullable(),
 });
 
+/* *********************** Restaurant schemas *********************** */
 export const RestaurantSchema = z.object({
   id: UUIDSchema,
   business_id: UUIDSchema,
@@ -60,27 +66,6 @@ export const ProfileResponseSchema = z.array(
     }).omit({ business_id: true }),
   })
 );
-
-export const EnvSchema = z.object({
-  ENV: z.string().min(1),
-  API_PORT: z.string().min(1),
-  ASSETS_URL: z.string().min(1),
-  DB_USER: z.string().min(1),
-  DB_PWD: z.string().min(1),
-  DB_HOST: z.string().min(1),
-  DB_PORT: z.string().min(1),
-  DB_DATABASE: z.string().min(1),
-  ACCESS_TOKEN_SECRET: z.string().min(1),
-  REFRESH_TOKEN_SECRET: z.string().min(1),
-  ACCESS_TOKEN_EXPIRY: z.string().min(1),
-  REFRESH_TOKEN_EXPIRY: z.string().min(1),
-  GOOGLE_ADDRESS_VALIDATION_URL: z.string().min(1),
-  ALLOWED_FILE_TYPES: z.string().min(1),
-  FILE_SIZE_LIMIT: z.string().min(1),
-  ITEM_IMAGE_UPLOAD_PATH: z.string().min(1),
-  COVER_IMAGE_UPLOAD_PATH: z.string().min(1),
-  LOGO_IMAGE_UPLOAD_PATH: z.string().min(1),
-});
 
 export const EditProfileTextReqSchema = z
   .object({
@@ -109,7 +94,6 @@ export const DeleteTableParamSchema = z.object({
 });
 
 /* *********************** Menu schemas *********************** */
-
 export const MenuItemSchema = z.object({
   id: UUIDSchema,
   categoryId: UUIDSchema,

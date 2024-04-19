@@ -3,6 +3,7 @@ import { JwtPayload } from "jsonwebtoken";
 
 import {
   AddressSchema,
+  CoordsSchema,
   ExtendedAddressSchema,
   BusinessSchema,
   RestaurantSchema,
@@ -20,6 +21,8 @@ export type JwtCustomPayload = JwtPayload & {
 };
 
 export type Address = z.infer<typeof AddressSchema>;
+
+export type Coords = z.infer<typeof CoordsSchema>;
 
 export type ExtendedAddress = z.infer<typeof ExtendedAddressSchema>;
 
