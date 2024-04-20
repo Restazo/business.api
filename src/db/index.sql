@@ -117,6 +117,7 @@ CREATE TABLE waiter (
 CREATE TABLE restaurant_table (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     restaurant_id UUID NOT NULL,
+    table_hash VARCHAR(255),
     label VARCHAR(255) NOT NULL,
     capacity SMALLINT NOT NULL,
     CONSTRAINT fk_restaurant
