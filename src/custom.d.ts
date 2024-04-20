@@ -1,5 +1,6 @@
 import { Request } from "express";
-import { ExtendedRequestSchema, EnvSchema } from "./schemas/schemas.ts";
+import { ExtendedRequestSchema } from "./schemas/schemas.ts";
+import { EnvSchema } from "./schemas/env.ts";
 import { Business, Restaurant } from "./schemas/types.js";
 import { z } from "zod";
 
