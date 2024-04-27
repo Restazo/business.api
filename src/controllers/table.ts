@@ -118,8 +118,6 @@ export const createTable = async (req: Request, res: Response) => {
 
     const encryptedData = encrypt(dataToEncrypt);
 
-    const byteLength = Buffer.byteLength(encryptedData, "utf8");
-
     const insertEncryptedDataQuery = `
       UPDATE restaurant_table
       SET table_hash = $1

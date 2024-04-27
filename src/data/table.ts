@@ -7,7 +7,7 @@ export const getTableById = async (tableId: string): Promise<Table | null> => {
   try {
     const query = `
     SELECT 
-      id, label, capacity, restaurant_id AS "restaurantId"
+      id, label, capacity, restaurant_id, AS "restaurantId", table_hash as "tableHash"
       FROM restaurant_table
       WHERE id = $1
     `;
@@ -36,7 +36,7 @@ export const getTableByLabelAndRestaurantId = async (
   try {
     const query = `
     SELECT 
-      id, label, capacity, restaurant_id AS "restaurantId"
+      id, label, capacity, restaurant_id AS "restaurantId", table_hash as "tableHash"
       FROM restaurant_table
       WHERE restaurant_id = $1
       AND label = $2
@@ -65,7 +65,7 @@ export const getTablesByRestaurantId = async (
   try {
     const query = `
     SELECT 
-      id, label, capacity, restaurant_id AS "restaurantId"
+      id, label, capacity, restaurant_id AS "restaurantId", table_hash as "tableHash"
       FROM restaurant_table
       WHERE restaurant_id = $1
     `;
