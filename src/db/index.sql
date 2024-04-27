@@ -132,7 +132,7 @@ CREATE TABLE restaurant_order (
     restaurant_id UUID NOT NULL,
     paid BOOLEAN DEFAULT FALSE NOT NULL,
     completed BOOLEAN DEFAULT FALSE NOT NULL,
-    created_at NUMERIC NOT NULL,
+    created_at BIGINT NOT NULL,
     CONSTRAINT fk_restaurant
         FOREIGN KEY(restaurant_id) 
         REFERENCES restaurant(id) 
