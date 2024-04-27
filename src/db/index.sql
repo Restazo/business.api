@@ -129,15 +129,25 @@ CREATE TABLE restaurant_table (
 -- Creating the 'restaurant_order' table
 CREATE TABLE restaurant_order (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    restaurant_id UUID NOT NULL,
     paid BOOLEAN DEFAULT FALSE NOT NULL,
     completed BOOLEAN DEFAULT FALSE NOT NULL,
-    created_at TIMESTAMP DEFAULT NOW() NOT NULL
+    created_at NUMERIC DEFAULT NOW() NOT NULL,
+    CONSTRAINT fk_restaurant
+        FOREIGN KEY(restaurant_id) 
+        REFERENCES restaurant(id) 
+        ON DELETE CASCADE
 );
 
 -- Creating the 'ongoing_table_orders' table
 CREATE TABLE ongoing_table_orders (
     table_id UUID NOT NULL,
+    restaurant_id UUID NOT NULL,
     order_id UUID NOT NULL UNIQUE,
+    CONSTRAINT fk_restaurant
+        FOREIGN KEY(restaurant_id) 
+        REFERENCES restaurant(id) 
+        ON DELETE CASCADE,
     CONSTRAINT fk_table
         FOREIGN KEY(table_id) 
         REFERENCES restaurant_table(id) 
