@@ -1,7 +1,7 @@
 -- Will delete all the data form all the tables
 TRUNCATE TABLE
-  order_items,
-  ongoing_table_orders,
+  order_item,
+  ongoing_order,
   restaurant_order,
   waiter,
   menu_item,
