@@ -1,3 +1,4 @@
+import { mainModule } from "process";
 import { z } from "zod";
 
 const toNumber = z.number().or(z.string()).pipe(z.coerce.number());
@@ -79,6 +80,7 @@ export const EditProfileTextReqSchema = z
 export const TableSchema = z.object({
   id: UUIDSchema,
   restaurantId: UUIDSchema,
+  tableHash: z.string().min(1),
   label: z.string().min(1),
   capacity: toNumber.pipe(z.number().int().min(1).max(30)),
 });
