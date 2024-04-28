@@ -132,7 +132,7 @@ CREATE TABLE restaurant_order (
     restaurant_id UUID NOT NULL,
     paid BOOLEAN DEFAULT FALSE NOT NULL,
     completed BOOLEAN DEFAULT FALSE NOT NULL,
-    created_at NUMERIC DEFAULT NOW() NOT NULL,
+    created_at BIGINT NOT NULL,
     CONSTRAINT fk_restaurant
         FOREIGN KEY(restaurant_id) 
         REFERENCES restaurant(id) 
@@ -140,7 +140,7 @@ CREATE TABLE restaurant_order (
 );
 
 -- Creating the 'ongoing_table_orders' table
-CREATE TABLE ongoing_table_orders (
+CREATE TABLE ongoing_order (
     table_id UUID NOT NULL,
     restaurant_id UUID NOT NULL,
     order_id UUID NOT NULL UNIQUE,
@@ -159,10 +159,10 @@ CREATE TABLE ongoing_table_orders (
 );
 
 -- Creating the 'order_items' table
-CREATE TABLE order_items (
+CREATE TABLE order_item (
     order_id UUID NOT NULL,
     item_id UUID NOT NULL,
-    amount SMALLINT NOT NULL,
+    quantity SMALLINT NOT NULL,
     CONSTRAINT fk_menu_item
         FOREIGN KEY(item_id) 
         REFERENCES menu_item(id) 
